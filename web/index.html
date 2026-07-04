@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>重力インベーダー | Gravity Invaders</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container">
+    <header>
+      <h1>重力インベーダー</h1>
+      <div id="score-board">
+        <span id="score">スコア: 0</span>
+        <span id="lives">ライフ: 3</span>
+        <span id="level">レベル: 1</span>
+      </div>
+    </header>
+    <canvas id="game-canvas" width="800" height="600"></canvas>
+    <div id="controls">
+      <p>← → : 移動 | ↑ : ショット | <strong>SPACE : 重力反転</strong></p>
+      <p id="gravity-indicator">重力方向: 下</p>
+    </div>
+    <div id="overlay" class="hidden">
+      <div id="overlay-content">
+        <h2 id="overlay-title">ゲームオーバー</h2>
+        <p id="overlay-message">最終スコア: 0</p>
+        <button id="restart-btn">もう一度プレイ</button>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
