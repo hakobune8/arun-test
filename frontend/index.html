@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>360°インベーダー - Space Invader Reimagined</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <div id="hud">
+      <div id="score">得点: 0</div>
+      <div id="lives">ライフ: ❤️❤️❤️</div>
+      <div id="level">レベル: 1</div>
+    </div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="overlay">
+      <h1>360°インベーダー</h1>
+      <p>マウスで照準、クリックで発射。矢印キーで移動。</p>
+      <button id="startBtn">ゲームスタート</button>
+    </div>
+    <div id="gameOver" style="display:none;">
+      <h1>ゲームオーバー</h1>
+      <p id="finalScore">最終得点: 0</p>
+      <button id="restartBtn">もう一度プレイ</button>
+    </div>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
