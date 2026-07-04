@@ -1,128 +1,28 @@
-# Gravity Flip Invader — Product / Design Brief
+# Product Brief: Kubernetes
 
-> **Version:** 1.0 (Sprint 1)  
-> **Status:** Approved — single source of truth for implementation, docs, and QA
+## Concept
 
----
+Kubernetes is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
-## 1. Product Concept
+## Target User
 
-**Gravity Flip Invader** は、プレイヤーが「重力の反転」を操作して敵を回避・撃破する、新規性のあるインベーダーゲームです。
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
-従来のインベーダーゲームが「上下移動＋弾発射」に限定されるのに対し、本ゲームでは **1 キーで重力を反転** でき、画面の上下が入れ替わることで、敵の配置・障害物・弾の軌道が動的に変化します。この mechanic が、戦略的なプレイと「あっと驚く」瞬間を生み出します。
+## Acceptance Criteria
 
----
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game when run through the Go server.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the static assets required for `/` to serve the same UI as local `go run .`.
 
-## 2. Target User
+## Non-Goals
 
-| 属性 | 説明 |
-|------|------|
-| デモグラフィック | 10〜30 代のカジュアルゲーマー、アーケードゲーム愛好家 |
-| プレイスタイル | シンプルな操作で深い戦略性を求めるユーザー |
-| 期待値 | 「すぐに遊べる」「1 回で面白い」「何度でもやりたくなる」 |
+- Multiplayer.
+- External score services.
+- Complex level progression.
 
----
+## Source Request
 
-## 3. Core Loop / Workflow
-
-```
-[開始] → 敵が上から降ってくる → 重力反転で位置をずらす → 弾で撃破 → スコア加算
-       → 敵の配置パターンが変化 → 重力反転で回避・攻撃 → 継続 or Game Over
-```
-
-1. **敵の出現** — 画面の上下から敵が降ってくる（または浮いてくる）
-2. **重力反転** — プレイヤーは `Space` キーで重力を反転（画面が上下入れ替わる）
-3. **弾の発射** — `Enter` キーで弾を発射（重力方向に合わせて軌道が変化する）
-4. **スコア計算** — 敵を撃破するとスコア加算、コンボボーナスあり
-5. **レベルアップ** — スコアまたは時間経過で敵の速度・配置パターンが変化
-
----
-
-## 4. Differentiating Behavior
-
-| 項目 | 従来型インベーダー | Gravity Flip Invader |
-|------|-------------------|---------------------|
-| 移動 | 左右のみ | 重力反転で上下が動的に切り替わる |
-| 弾の軌道 | 常に上方向 | 重力方向に合わせて弾の軌道が変化する |
-| 障害物 | 固定またはゆっくり移動 | 重力反転で配置が相対的に変化する |
-| ストラテジー | 位置取りとタイミング | 重力のタイミングが戦略の核心 |
-
-**差別化の核心:** 「重力反転」が単なるギミックではなく、**回避・攻撃・配置のすべてに影響する戦略 mechanic** として機能すること。
-
----
-
-## 5. Acceptance Criteria
-
-### AC-1: 新規性（Gravity Flip Mechanic）
-- [ ] プレイヤーが `Space` キーで重力を反転できる
-- [ ] 重力反転時に画面の上下が視覚的に反転する（アニメーション付き）
-- [ ] 弾の発射方向が現在の重力方向に連動する
-- [ ] 敵の移動方向が重力方向に影響される
-
-### AC-2: 楽しさ（Core Loop Validation）
-- [ ] 敵を撃破するとスコアが加算される
-- [ ] コンボシステム（連続撃破でボーナス）が実装されている
-- [ ] 少なくとも 3 種類の敵配置パターンが存在する
-- [ ] Game Over 条件（プレイヤーの弾が敵に当たる / プレイヤーが敵に衝突）が明確
-
-### AC-3: ポップ（Visual Feedback）
-- [ ] 重力反転時に画面全体が反転するアニメーション（0.3 秒以内）
-- [ ] 敵撃破時にパーティクルエフェクトが表示される
-- [ ] スコア表示が画面の上部（重力方向に応じて位置が変化する）
-- [ ] プレイヤーの弾が重力方向に発射される軌道アニメーション
-
-### AC-4: シンプルさ（Accessibility）
-- [ ] 操作は `Space`（重力反転）と `Enter`（弾発射）の 2 キーのみ
-- [ ] 初期画面で操作説明が 3 秒以内に理解できる
-- [ ] レベルアップ時の遷移がスムーズ（画面遷移なし）
-
-### AC-5: Production-Ready（Technical Quality）
-- [ ] Go HTTP server が `/` でゲーム画面を提供する
-- [ ] Health endpoint (`/health`) が `200 OK` を返す
-- [ ] Dockerfile が存在し、`docker build` でビルドできる
-- [ ] Helm chart が存在し、`helm template` でマニフェストが生成できる
-- [ ] GitHub Actions CI が lint、build、smoke test を実行する
-
----
-
-## 6. Non-Goals
-
-| 項目 | 理由 |
-|------|------|
-| マルチプレイヤー | Sprint 1 の範囲外。シングルプレイに集中 |
-| 外部サービス連携 | 外部依存なしで動作すること |
-| 複雑なストーリー | ゲームプレイに集中するため、ストーリー要素は最小限 |
-| モバイル対応 | ブラウザベースのデスクトッププレイに最適化 |
-| 音楽・SE | Sprint 1 は視覚的フィードバックに集中（Sprint 2 以降で検討） |
-| 高スコアランキング | ローカルスコアのみ。サーバー連携は後続 Sprint |
-
----
-
-## 7. QA Validation Checklist
-
-| 番号 | チェック項目 | 判定方法 |
-|------|-------------|----------|
-| QA-1 | 重力反転が正常に動作するか | ブラウザで `Space` キーを押して画面が反転することを確認 |
-| QA-2 | 弾が重力方向に発射されるか | `Enter` キーで弾を発射し、軌道を確認 |
-| QA-3 | スコア加算が正常か | 敵を撃破してスコアが増加することを確認 |
-| QA-4 | コンボボーナスが正常か | 連続撃破でボーナススコアが加算されることを確認 |
-| QA-5 | Game Over が正常か | プレイヤーが敵に衝突してゲームが終了することを確認 |
-| QA-6 | `/health` endpoint が正常か | `curl http://localhost:8080/health` で `200 OK` を確認 |
-| QA-7 | Docker build が正常か | `docker build -t gravity-flip-invader .` でビルド成功を確認 |
-| QA-8 | Helm template が正常か | `helm template gravity-flip-invader charts/gravity-flip-invader` でマニフェスト生成を確認 |
-
----
-
-## 8. Glossary
-
-| 用語 | 説明 |
-|------|------|
-| 重力反転 | プレイヤーが `Space` キーで画面の上下を入れ替える mechanic |
-| 弾の軌道 | 現在の重力方向に合わせて弾が発射される方向 |
-| コンボ | 連続で敵を撃破した際にボーナススコアが加算されるシステム |
-| レベルアップ | スコアまたは時間経過で敵の速度・配置パターンが変化するイベント |
-
----
-
-*この brief は Sprint 1〜3 の実装、ドキュメント、QA の唯一の source of truth です。*  
-*変更が必要な場合は、この document を更新し、関連するすべての artifact（README、UI ラベル、コードコメント）を同期してください。*
+Sprint 3 documentation: update README or docs with a product-centered overview, primary user walkthrough, acceptance criteria status, local run, test, Docker, Helm/Kubernetes deploy, rollback or operations notes, and reviewer guidance. README H1 must be the product name or repository name, not a deployment topic such as Kubernetes. Explain what was built and how it behaves before listing commands. Keep README concise, move detailed procedures into focused docs, remove duplicated or stale instructions, remove copied parent-task prompt text, remove duplicate product brief files including product/design.md when it competes with docs/product-brief.md, and remove links to non-existent sprint reports or operations docs. Documentation must describe the implemented product, not an aspirational or alternate concept. Artifact hygiene: do not copy the full parent task, prompt text, run workspace contents, compiled binaries, or ARUN-generated archive artifacts into repository documentation or product files. Summarize only the relevant product requirements and keep generated reports concise.

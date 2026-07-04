@@ -1,4 +1,4 @@
-# One-Button Invaders
+# Kubernetes
 
 This repository started empty. ARUN generated a minimal static browser game with a gravity-lane mechanic so an implementation-heavy scrum workflow can produce reviewable code, documentation, and validation artifacts without GitHub API calls.
 
