@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gravity Invaders - 重力インベーダー</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-container">
+    <header class="game-header">
+      <h1 class="game-title">Gravity Invaders</h1>
+      <div class="score-display">
+        <span class="score-label">SCORE</span>
+        <span id="score" class="score-value">0</span>
+      </div>
+      <div class="lives-display">
+        <span class="lives-label">LIVES</span>
+        <span id="lives" class="lives-value">♥♥♥</span>
+      </div>
+    </header>
+    <canvas id="gameCanvas" class="game-canvas" width="600" height="500"></canvas>
+    <div class="game-controls">
+      <p class="control-hint">← → キー または マウス でパドルを操作</p>
+      <p class="control-hint">敵をパドルで受け止めてスコアを稼ぎましょう！</p>
+    </div>
+    <div id="gameOver" class="game-over hidden">
+      <h2>GAME OVER</h2>
+      <p>Final Score: <span id="finalScore">0</span></p>
+      <button id="restartBtn" class="restart-btn">もう一度プレイ</button>
+    </div>
+    <div id="startScreen" class="start-screen">
+      <h2>Gravity Invaders</h2>
+      <p class="start-desc">敵が重力で落ちてきます！パドルで受け止めてスコアを稼ぎましょう。</p>
+      <button id="startBtn" class="start-btn">ゲームスタート</button>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
