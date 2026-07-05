@@ -1,0 +1,9 @@
+apiVersion: v2
+name: invader-game
+description: 新規性のあるインベーダーゲーム - Go HTTP server with lightweight frontend
+version: 0.1.0
+appVersion: "1.0.0"
+type: application
+maintainers:
+  - name: hakobune8
+    email: hakobune8@example.com

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbit Defenders</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div class="ui-overlay">
+            <div class="score">Score: <span id="scoreValue">0</span></div>
+            <div class="health">Health: <span id="healthValue">100</span>%</div>
+            <div class="level">Level: <span id="levelValue">1</span></div>
+        </div>
+        <div id="startScreen" class="screen">
+            <h1>Orbit Defenders</h1>
+            <p>Click to start</p>
+            <p class="instructions">Use mouse to orbit. Click to shoot.</p>
+        </div>
+        <div id="gameOverScreen" class="screen hidden">
+            <h1>Game Over</h1>
+            <p>Final Score: <span id="finalScore">0</span></p>
+            <p>Click to restart</p>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
