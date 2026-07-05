@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gravity Flip Invaders</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0a0a1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+    }
+
+    #game-container {
+      position: relative;
+      border: 2px solid #4a9eff;
+      border-radius: 8px;
+      box-shadow: 0 0 30px rgba(74, 158, 255, 0.3);
+    }
+
+    canvas {
+      display: block;
+      background: linear-gradient(180deg, #0a0a1a 0%, #1a1a3a 100%);
+    }
+
+    #ui-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    #score-display {
+      color: #4a9eff;
+      font-size: 24px;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(74, 158, 255, 0.5);
+    }
+
+    #lives-display {
+      color: #ff6b6b;
+      font-size: 20px;
+      text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+    }
+
+    #game-over {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+      display: none;
+      pointer-events: auto;
+    }
+
+    #game-over h1 {
+      font-size: 48px;
+      color: #ff6b6b;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(255, 107, 107, 0.7);
+    }
+
+    #game-over p {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+
+    #restart-btn {
+      background: #4a9eff;
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      pointer-events: auto;
+    }
+
+    #restart-btn:hover {
+      background: #6bb3ff;
+      transform: scale(1.05);
+    }
+
+    #start-screen {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+      pointer-events: auto;
+    }
+
+    #start-screen h1 {
+      font-size: 42px;
+      color: #4a9eff;
+      margin-bottom: 15px;
+      text-shadow: 0 0 20px rgba(74, 158, 255, 0.7);
+    }
+
+    #start-screen p {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #b0b0d0;
+    }
+
+    #start-screen .controls {
+      margin: 20px 0;
+      padding: 15px;
+      background: rgba(74, 158, 255, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(74, 158, 255, 0.3);
+    }
+
+    #start-btn {
+      background: #4a9eff;
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 20px;
+    }
+
+    #start-btn:hover {
+      background: #6bb3ff;
+      transform: scale(1.05);
+    }
+
+    .gravity-indicator {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ffd700;
+      font-size: 16px;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    
+    <div id="ui-overlay">
+      <div style="display: flex; justify-content: space-between; width: 100%;">
+        <div id="score-display">Score: 0</div>
+        <div id="lives-display">Lives: ♥♥♥</div>
+      </div>
+      <div class="gravity-indicator" id="gravity-indicator">Gravity: DOWN</div>
+    </div>
+
+    <div id="start-screen">
+      <h1>GRAVITY FLIP INVADERS</h1>
+      <p>反転する重力で敵を倒せ！</p>
+      <div class="controls">
+        <p>← → : 移動</p>
+        <p>SPACE : 重力反転</p>
+        <p>Z : 発射</p>
+      </div>
+      <button id="start-btn">ゲームスタート</button>
+    </div>
+
+    <div id="game-over">
+      <h1>GAME OVER</h1>
+      <p id="final-score">Score: 0</p>
+      <button id="restart-btn">もう一度プレイ</button>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('score-display');
+    const livesDisplay = document.getElementById('lives-display');
+    const gravityIndicator = document.getElementById('gravity-indicator');
+    const startScreen = document.getElementById('start-screen');
+    const gameOverScreen = document.getElementById('game-over');
+    const finalScoreDisplay = document.getElementById('final-score');
+    const startBtn = document.getElementById('start-btn');
+    const restartBtn = document.getElementById('restart-btn');
+
+    // Game state
+    let gameRunning = false;
+    let score = 0;
+    let lives = 3;
+    let gravity = 1; // 1 = down, -1 = up
+    let lastTime = 0;
+    let enemySpawnTimer = 0;
+    let enemySpawnInterval = 2000; // ms
+    let difficultyMultiplier = 1;
+
+    // Player
+    const player = {
+      x: 400,
+      y: 550,
+      width: 40,
+      height: 30,
+      speed: 300,
+      color: '#4a9eff'
+    };
+
+    // Arrays for game objects
+    let bullets = [];
+    let enemies = [];
+    let particles = [];
+
+    // Input handling
+    const keys = {};
+    document.addEventListener('keydown', (e) => {
+      keys[e.code] = true;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        flipGravity();
+      }
+      if (e.code === 'KeyZ' && gameRunning) {
+        shoot();
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      keys[e.code] = false;
+    });
+
+    function flipGravity() {
+      if (!gameRunning) return;
+      gravity *= -1;
+      player.y = gravity === 1 ? canvas.height - player.height - 10 : 10;
+      gravityIndicator.textContent = `Gravity: ${gravity === 1 ? 'DOWN' : 'UP'}`;
+      gravityIndicator.style.color = gravity === 1 ? '#ffd700' : '#ff6b6b';
+    }
+
+    function shoot() {
+      bullets.push({
+        x: player.x + player.width / 2,
+        y: gravity === 1 ? player.y : player.y + player.height,
+        width: 4,
+        height: 10,
+        speed: 500,
+        direction: gravity
+      });
+    }
+
+    function spawnEnemy() {
+      const side = Math.random() > 0.5 ? 'top' : 'bottom';
+      enemies.push({
+        x: Math.random() * (canvas.width - 30),
+        y: side === 'top' ? -30 : canvas.height + 30,
+        width: 30,
+        height: 30,
+        speed: 100 * difficultyMultiplier,
+        direction: side === 'top' ? 1 : -1,
+        color: '#ff6b6b',
+        wobble: Math.random() * Math.PI * 2
+      });
+    }
+
+    function createExplosion(x, y, color) {
+      for (let i = 0; i < 10; i++) {
+        particles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 200,
+          vy: (Math.random() - 0.5) * 200,
+          life: 1,
+          color: color,
+          size: Math.random() * 4 + 2
+        });
+      }
+    }
+
+    function update(deltaTime) {
+      if (!gameRunning) return;
+
+      // Player movement
+      if (keys['ArrowLeft']) {
+        player.x = Math.max(0, player.x - player.speed * deltaTime);
+      }
+      if (keys['ArrowRight']) {
+        player.x = Math.min(canvas.width - player.width, player.x + player.speed * deltaTime);
+      }
+
+      // Update bullets
+      bullets = bullets.filter(bullet => {
+        bullet.y += bullet.speed * bullet.direction * deltaTime;
+        return bullet.y > 0 && bullet.y < canvas.height;
+      });
+
+      // Spawn enemies
+      enemySpawnTimer += deltaTime * 1000;
+      if (enemySpawnTimer >= enemySpawnInterval) {
+        spawnEnemy();
+        enemySpawnTimer = 0;
+        // Increase difficulty over time
+        difficultyMultiplier = 1 + score / 500;
+        enemySpawnInterval = Math.max(800, 2000 - score / 2);
+      }
+
+      // Update enemies
+      enemies = enemies.filter(enemy => {
+        enemy.x += enemy.speed * deltaTime;
+        enemy.y += enemy.direction * enemy.speed * 0.5 * deltaTime;
+        enemy.wobble += deltaTime * 3;
+        enemy.x += Math.sin(enemy.wobble) * 50 * deltaTime;
+
+        // Check collision with player
+        if (rectCollision(enemy, player)) {
+          lives--;
+          updateLivesDisplay();
+          createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#ff6b6b');
+          if (lives <= 0) {
+            endGame();
+          }
+          return false;
+        }
+
+        // Check collision with bullets
+        for (let i = bullets.length - 1; i >= 0; i--) {
+          if (rectCollision(enemy, bullets[i])) {
+            bullets.splice(i, 1);
+            score += 10;
+            updateScoreDisplay();
+            createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#ffd700');
+            return false;
+          }
+        }
+
+        // Remove if off screen
+        return enemy.y > -50 && enemy.y < canvas.height + 50;
+      });
+
+      // Update particles
+      particles = particles.filter(particle => {
+        particle.x += particle.vx * deltaTime;
+        particle.y += particle.vy * deltaTime;
+        particle.life -= deltaTime * 2;
+        return particle.life > 0;
+      });
+    }
+
+    function rectCollision(rect1, rect2) {
+      return rect1.x < rect2.x + rect2.width &&
+             rect1.x + rect1.width > rect2.x &&
+             rect1.y < rect2.y + rect2.height &&
+             rect1.y + rect1.height > rect2.y;
+    }
+
+    function render() {
+      // Clear canvas
+      ctx.fillStyle = 'rgba(10, 10, 26, 0.3)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw gravity lines
+      ctx.strokeStyle = 'rgba(74, 158, 255, 0.1)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < canvas.height; i += 50) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(canvas.width, i);
+        ctx.stroke();
+      }
+
+      // Draw player
+      ctx.fillStyle = player.color;
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = player.color;
+      ctx.beginPath();
+      ctx.moveTo(player.x + player.width / 2, player.y);
+      ctx.lineTo(player.x + player.width, player.y + player.height);
+      ctx.lineTo(player.x, player.y + player.height);
+      ctx.closePath();
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Draw bullets
+      ctx.fillStyle = '#ffd700';
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = '#ffd700';
+      bullets.forEach(bullet => {
+        ctx.fillRect(bullet.x - bullet.width / 2, bullet.y, bullet.width, bullet.height);
+      });
+      ctx.shadowBlur = 0;
+
+      // Draw enemies
+      enemies.forEach(enemy => {
+        ctx.fillStyle = enemy.color;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = enemy.color;
+        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+        
+        // Draw enemy eyes
+        ctx.fillStyle = '#0a0a1a';
+        ctx.fillRect(enemy.x + 5, enemy.y + 8, 6, 6);
+        ctx.fillRect(enemy.x + 19, enemy.y + 8, 6, 6);
+        ctx.shadowBlur = 0;
+      });
+
+      // Draw particles
+      particles.forEach(particle => {
+        ctx.globalAlpha = particle.life;
+        ctx.fillStyle = particle.color;
+        ctx.fillRect(particle.x - particle.size / 2, particle.y - particle.size / 2, particle.size, particle.size);
+      });
+      ctx.globalAlpha = 1;
+
+      // Draw gravity boundary indicators
+      ctx.strokeStyle = gravity === 1 ? 'rgba(255, 107, 107, 0.5)' : 'rgba(74, 158, 255, 0.5)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(0, gravity === 1 ? canvas.height - 5 : 5);
+      ctx.lineTo(canvas.width, gravity === 1 ? canvas.height - 5 : 5);
+      ctx.stroke();
+    }
+
+    function updateScoreDisplay() {
+      scoreDisplay.textContent = `Score: ${score}`;
+    }
+
+    function updateLivesDisplay() {
+      livesDisplay.textContent = `Lives: ${'♥'.repeat(lives)}`;
+    }
+
+    function endGame() {
+      gameRunning = false;
+      finalScoreDisplay.textContent = `Score: ${score}`;
+      gameOverScreen.style.display = 'block';
+    }
+
+    function startGame() {
+      // Reset game state
+      score = 0;
+      lives = 3;
+      gravity = 1;
+      player.x = canvas.width / 2 - player.width / 2;
+      player.y = canvas.height - player.height - 10;
+      bullets = [];
+      enemies = [];
+      particles = [];
+      enemySpawnTimer = 0;
+      difficultyMultiplier = 1;
+      enemySpawnInterval = 2000;
+
+      updateScoreDisplay();
+      updateLivesDisplay();
+      gravityIndicator.textContent = 'Gravity: DOWN';
+      gravityIndicator.style.color = '#ffd700';
+
+      startScreen.style.display = 'none';
+      gameOverScreen.style.display = 'none';
+      gameRunning = true;
+
+      lastTime = performance.now();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function gameLoop(currentTime) {
+      const deltaTime = Math.min((currentTime - lastTime) / 1000, 0.05);
+      lastTime = currentTime;
+
+      update(deltaTime);
+      render();
+
+      if (gameRunning) {
+        requestAnimationFrame(gameLoop);
+      }
+    }
+
+    // Event listeners
+    startBtn.addEventListener('click', startGame);
+    restartBtn.addEventListener('click', startGame);
+
+    // Initial render
+    render();
+  </script>
+</body>
+</html>
