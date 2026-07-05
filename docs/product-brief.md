@@ -1,107 +1,24 @@
-# Product Design Brief: Neon Invaders
+# Product Brief: One-Button Invaders
 
-## 概要
+## Concept
 
-**Neon Invaders** は、レトロなインベーダーゲームの核心を維持しつつ、ネオン美学とミニマルなインタラクションで差別化したブラウザベースのアーケードゲームです。
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
----
+## Target User
 
-## 対象ユーザー
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
-- レトロゲームを愛するカジュアルゲーマー
-- ブラウザですぐに遊べる軽量ゲームを求めるユーザー
-- ビジュアル美学（ネオン/サイバーパンク）に惹かれる層
+## Acceptance Criteria
 
----
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game when run through the Go server.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the static assets required for `/` to serve the same UI as local `go run .`.
 
-## コアループ
+## Non-Goals
 
-1. **スタート**: プレイヤーは画面下部の自機を操作
-2. **戦闘**: 上から降ってくる敵弾を回避しつつ、自機から弾を発射して敵を破壊
-3. **スコア**: 敵を倒すたびにスコア加算。ネオンエフェクトで視覚的フィードバック
-4. **ゲームオーバー**: 自機が敵弾に当たるとゲーム終了。スコア表示
-5. **リトライ**: 即座にリスタート可能
-
----
-
-## 差別化要素
-
-### 1. ネオン美学
-- 黒背景に発光するネオンカラー（シアン、マゼンタ、イエロー）のゲーム要素
-- CSS `box-shadow` と `text-shadow` を活用したグローエフェクト
-- 敵破壊時のパーティクルエフェクト（ネオン色の破片が散る）
-
-### 2. ボス戦
-- 通常敵を一定数破壊するとボスが出現
-- ボスは複数弾パターンで攻撃（直進弾＋拡散弾）
-- ボス撃破でボーナススコア
-
-### 3. ミニマル操作
-- マウスまたはタッチのみで操作（キーボード不要）
-- 自機はマウス位置に追従
-- 自動発射またはクリックで発射
-
----
-
-## 受入基準（Acceptance Criteria）
-
-| ID | 要件 | 検証方法 |
-|----|------|----------|
-| AC-01 | ゲームはブラウザで起動可能（外部サービス不要） | `localhost:8080` にアクセスしてゲーム画面が表示される |
-| AC-02 | 自機がマウス操作で移動可能 | マウス移動に合わせて自機が追従する |
-| AC-03 | 敵が画面上部から降下し、破壊可能 | 敵を撃つと消滅し、スコアが加算される |
-| AC-04 | ネオンビジュアルが適用されている | 発光エフェクト（グロー）がゲーム要素に適用されている |
-| AC-05 | ボス戦が実装されている | 通常敵を10体破壊後にボスが出現する |
-| AC-06 | ゲームオーバーとスコア表示 | 自機が破壊されるとゲームオーバー画面に遷移し、スコアが表示される |
-| AC-07 | リトライ機能 | ゲームオーバー後、リトライボタンで即座に再開できる |
-| AC-08 | ヘルスエンドが動作する | `GET /health` で `200 OK` が返る |
-
----
-
-## 非目標（Non-Goals）
-
-- マルチプレイヤー機能
-- 外部スコアボード/リーダーボード
-- 複雑なストーリーモード
-- モバイルネイティブアプリ（PWAはSprint 2以降）
-- サウンドエフェクト（Sprint 2以降）
-
----
-
-## 定性的要求 → 観測可能基準の変換
-
-| 定性的意図 | 観測可能基準 |
-|-----------|-------------|
-| 「新規性」 | ネオン美学＋ボス戦という組み合わせで、既存のインベーダーゲームと差別化されている |
-| 「楽しい」 | コアループが明確で、スコア加算と視覚的フィードバックが即時提供される |
-| 「ポップ」 | ネオンカラーの発光エフェクトが適用され、黒背景とのコントラストが明確 |
-| 「シンプル」 | マウス操作のみでプレイ可能。複雑な設定や説明不要 |
-| 「production-ready」 | Docker化、Kubernetesデプロイ対応、CI/CDパイプライン、ヘルスエンドが実装されている |
-
----
-
-## 実装スコープ（Sprint 1）
-
-- Go HTTP サーバー（静的ファイル配信＋ヘルスエンド）
-- Canvas ベースのゲーム UI（HTML/CSS/JavaScript）
-- ネオンビジュアル（CSS グローエフェクト）
-- 基本ゲームループ（自機移動、敵出現、弾発射、衝突判定）
-- ボス戦（簡易実装）
-- スコア表示とゲームオーバー画面
-- Dockerfile
-- Helm chart（最小構成）
-- GitHub Actions CI（build＋lint）
-
----
-
-## ドキュメント
-
-- `README.md` — 概要、起動方法、検証コマンド
-- `docs/product-brief.md` — この文書（Source of Truth）
-- `docs/deployment.md` — Kubernetes デプロイ手順
-- `docs/sprint-report.md` — スプリント報告
-
----
-
-**最終更新**: 2026-07-05
-**ステータス**: 承認済み（Sprint 1 実装の Source of Truth）
+- Multiplayer.
+- External score services.
+- Complex level progression.
