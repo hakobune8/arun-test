@@ -1,0 +1,1 @@
+Run `helm template {{ .Release.Name }} .` to render the Kubernetes manifests.
