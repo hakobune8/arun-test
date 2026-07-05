@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: invader-game
+  labels:
+    app.kubernetes.io/name: invader-game
+    app.kubernetes.io/component: infrastructure
+    app.kubernetes.io/part-of: arun-test
