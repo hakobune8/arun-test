@@ -1,24 +1,55 @@
-# Product Brief: Product Brief Md
+# Neon Rhythm Invaders — Product Brief
 
 ## Concept
 
-Product Brief Md is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+**Neon Rhythm Invaders** は、リズムゲームのビートとシューティングゲームの操作を融合した、ブラウザで動作するインベーダーゲームです。
+
+敵の出現パターンや攻撃タイミングが音楽のビートに同期し、プレイヤーはリズムに合わせて弾を発射することで高得点を獲得します。ビートに合わせるとボーナススコアが加算され、リズム感を試すゲームプレイを提供します。
 
 ## Target User
 
-- Players who want a short arcade loop with one clear twist.
-- Reviewers who need a fresh-checkout slice that runs without external services.
+- ブラウザで手軽にプレイできるカジュアルゲームを好むユーザー
+- シューティングゲームとリズムゲームの両方に興味があるユーザー
+- 短時間で遊べるが、スキル向上の余地があるゲームを求めるユーザー
+
+## Core Loop
+
+1. ゲーム開始 → 音楽のビートが流れる
+2. 敵がビートに合わせて出現・移動
+3. プレイヤーはスペースキー（またはクリック）で弾を発射
+4. ビートタイミングに合わせて撃つとボーナススコア加算
+5. 敵を全滅させると次のフェーズへ（難易度上昇）
+6. 敵の弾に当たるとライフ減少、0でゲームオーバー
+
+## Differentiating Behavior
+
+- **リズム同期メカニクス**: 敵の出現と移動が音楽のビートに同期。プレイヤーもビートに合わせて撃つことでボーナススコアが加算される
+- **視覚的フィードバック**: ビートタイミングに画面が点滅し、リズム感を視覚的にフィードバック
+- **シンプル操作**: 左右移動＋発射の最小限操作で、リズム感を試せる
 
 ## Acceptance Criteria
 
-- The visible title, README H1, and this product brief use the same product name.
-- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
-- Space changes the gravity lane between Floor and Ceiling.
-- A score is awarded only when the defender is aligned with the invader and on the same lane.
-- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `go run ./server`.
+| # | 要求 | 観測可能な検証方法 |
+|---|------|-------------------|
+| AC-1 | `/` でゲーム画面がブラウザで表示される | `curl http://localhost:8080/` で HTML が返る |
+| AC-2 | 敵が出現し、プレイヤーが弾で破壊できる | ゲームプレイ中に敵が画面に表示され、弾で消滅する |
+| AC-3 | ビートタイミングに合わせて撃つとボーナススコアが加算される | スコア表示で通常スコアとボーナススコアが区別される |
+| AC-4 | ゲームオーバー時にスコアとリトライオプションが表示される | ライフが0になるとゲームオーバー画面に遷移する |
+| AC-5 | `/healthz` でヘルスチェックが正常応答する | `curl http://localhost:8080/healthz` で `200 OK` が返る |
 
 ## Non-Goals
 
-- Multiplayer.
-- External score services.
-- Complex level progression.
+- マルチプレイヤー機能
+- 外部サービスへのスコア投稿
+- 複雑なストーリーモード
+- モバイルタッチ操作の最適化（Sprint 1 ではキーボード操作のみ）
+
+## Qualitative Requirements → Observable Criteria
+
+| 定性要求 | 観測可能な criteria |
+|----------|-------------------|
+| 新規性 | リズム同期メカニクスが実装されている（AC-3） |
+| 楽しい | ボーナススコアシステムでリズム感を試せる（AC-3） |
+| ポップ | ネオンカラーの視覚スタイルが適用されている |
+| シンプル | 操作はキーボードの左右＋スペースのみ |
+| Production-ready | `/healthz` エンドポイント、Dockerfile、CI が存在 |

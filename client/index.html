@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neon Rhythm Invaders</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div id="game-container">
+    <header id="hud">
+      <div class="hud-left">
+        <h1 id="title">Neon Rhythm Invaders</h1>
+        <div id="score-display">Score: <span id="score">0</span></div>
+        <div id="combo-display">Combo: <span id="combo">0</span>x</div>
+      </div>
+      <div class="hud-right">
+        <div id="beat-indicator">
+          <div id="beat-bar"></div>
+          <span id="beat-label">BEAT</span>
+        </div>
+        <div id="lives-display">Lives: <span id="lives">3</span></div>
+      </div>
+    </header>
+    <canvas id="game-canvas" width="800" height="600"></canvas>
+    <footer id="controls-hint">
+      ← → to move &nbsp;|&nbsp; SPACE to shoot (on-beat for bonus) &nbsp;|&nbsp; P to pause
+    </footer>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
