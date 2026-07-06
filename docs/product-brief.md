@@ -1,24 +1,63 @@
-# Product Brief: Product Brief Md
+# Product Brief: Rhythm Invaders
 
 ## Concept
 
-Product Brief Md is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+**Rhythm Invaders** — 音楽のビートに同期して敵を倒す、リズムアクション型インベーダーゲーム。
 
-## Target User
+従来のインベーダーゲームの「敵を撃つ」コアアクションに、リズムゲームの「タイミング」要素を融合。プレイヤーはビートに合わせて弾を発射し、正確なタイミングで敵を倒すことでスコアが倍増する。音楽とゲームプレイが一体となった、新規性の高い体験を提供する。
 
-- Players who want a short arcade loop with one clear twist.
-- Reviewers who need a fresh-checkout slice that runs without external services.
+## Target Users
+
+- ゲームと音楽の両方を愛好する層
+- シンプルなルールで没入感を得たいカジュアルゲーマー
+- リズムゲームの経験があるが、従来のパターン暗記型ゲームに飽きた層
+
+## Core Loop
+
+1. **音楽のビートを聴く** — BGMのテンポとビートが流れ続ける
+2. **ビートに合わせて操作する** — スペースキー（またはクリック）で弾を発射。ビートに同期したタイミングで発射すると「パーフェクト判定」
+3. **敵を倒す** — パーフェクトタイミングで倒した敵は通常スコアの2倍。ミスすると敵の弾がプレイヤーに到達しやすくなる
+4. **スコアを伸ばす** — コンボを繋げてスコアを最大化。ゲームオーバーは全敵撃破またはライフ喪失
+
+## Differentiating Behavior
+
+- **リズム同期発射**: 弾の発射タイミングがビートと同期しているかどうかがスコアに直接影響。従来のインベーダーでは「撃つ」こと自体が目的だが、本作では「正しいタイミングで撃つ」ことが核心
+- **ビート可視化**: 画面下部にビートインジケーターを表示。プレイヤーは視覚と聴覚の両方でタイミングを把握できる
+- **動的難易度**: 敵の出現パターンと弾の速度がBGMのテンポに連動。音楽が速くなればゲームも加速する
 
 ## Acceptance Criteria
 
-- The visible title, README H1, and this product brief use the same product name.
-- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
-- Space changes the gravity lane between Floor and Ceiling.
-- A score is awarded only when the defender is aligned with the invader and on the same lane.
-- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `go run ./server`.
+| 定性要求 | 観測可能な基準 |
+|---------|--------------|
+| 新規性 | 弾の発射タイミングがビートと連動している。ビート同期発射でスコア倍増するメカニクスが実装されている |
+| 楽しい | 音楽と操作が同期しており、プレイヤーがリズムに乗って操作できる。パーフェクト判定のフィードバックが明確 |
+| ポップ | 視覚的に明るく、カラフルなUI。敵のデザインが親しみやすい |
+| シンプル | ルール説明が1ページ以内に収まる。操作はキーボード1キー（またはマウスクリック） |
+| Production-ready | `/healthz` エンドポイントが200を返す。Dockerビルドが成功する。Helm chartでデプロイ可能 |
 
 ## Non-Goals
 
-- Multiplayer.
-- External score services.
-- Complex level progression.
+- マルチプレイヤー機能（Sprint 1では実装しない）
+- 外部サービス連携（スコア保存はローカルのみ）
+- 複雑なストーリーモード
+- モバイルネイティブアプリ
+
+## QA Verification
+
+1. `/` にアクセスするとゲーム画面が表示される
+2. `/healthz` にアクセスすると `200 OK` が返る
+3. ゲーム開始後、ビートに合わせて弾を発射するとスコアが倍増する
+4. ビートインジケーターが画面下部に表示される
+5. Docker build が成功し、`docker run` でローカル起動できる
+6. Helm chart で Kubernetes にデプロイできる
+
+## Sprint 1 Scope
+
+- Go net/http サーバーの構築（`/healthz`、`/` でゲーム画面提供）
+- 最小限のフロントエンド（HTML/CSS/JS）でリズム同期発射の概念を検証
+- Dockerfile、Helm chart、GitHub Actions CI
+- 基本的なテストとドキュメント
+
+---
+
+*このドキュメントは Sprint 1〜3 の唯一の source of truth です。概念の漂移（drift）は許容されません。*
