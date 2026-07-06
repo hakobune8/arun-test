@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>リズムインベーダー</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <div id="hud">
+      <div id="score">スコア: 0</div>
+      <div id="lives">ライフ: 3</div>
+      <div id="rhythm-bar">
+        <div id="rhythm-indicator"></div>
+      </div>
+    </div>
+    <canvas id="game-canvas" width="640" height="480"></canvas>
+    <div id="overlay">
+      <h1>リズムインベーダー</h1>
+      <p>リズムに合わせて敵を撃て！</p>
+      <p id="controls">← → : 移動 | スペース : 撃つ（リズムタイミングで高得点）</p>
+      <button id="start-btn">スタート</button>
+    </div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
