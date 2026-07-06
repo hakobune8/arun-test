@@ -1,74 +1,114 @@
-# Gravity Invaders — Product Brief
+# プロダクトブリーフ: Orbit Invaders (オービットインベーダー)
 
-## Concept
+## コンセプト
 
-**Gravity Invaders** is a browser-based space invader game where the player can **flip gravity** to move between the top and bottom of the screen, dodging enemy fire and positioning for optimal shots.
+惑星のように中心点を周回する敵を、軌道力学を考慮して撃ち落とすアーケードシューティングゲーム。
 
-## Target User
+従来のインベーダーゲームは「直進する敵を撃つ」が、本ゲームは「回転する敵を予測して撃つ」が中核体験。
 
-Casual browser gamers who enjoy arcade-style games with a quick learning curve and a single novel mechanic that creates fresh tactical decisions.
+## 対象ユーザー
 
-## Core Loop
+- アーケードゲームやレトロゲームを好むカジュアルゲーマー
+- シンプルだが奥のあるゲームプレイを求めるプレイヤー
+- 短時間で遊べるゲームを好むユーザー
 
-1. Player ship moves left/right and can **flip gravity** (spacebar) to switch between top and bottom lanes.
-2. Enemy waves descend from the center, firing in patterns.
-3. Player shoots enemies while avoiding collisions and incoming fire.
-4. Clearing a wave triggers the next wave with increased difficulty.
-5. Game ends when the player loses all lives.
+## コアループ
 
-## Differentiating Mechanic
+1. 敵グループが中心点を周回開始
+2. プレイヤーは自機を左右に移動
+3. 敵の軌道を読み、タイミングよく発射
+4. 命中判定 → スコア加算 → 次のウェーブ
+5. 敵の弾を回避
+6. ライフが尽きたらゲームオーバー
 
-**Gravity Flip** — Pressing spacebar instantly reverses the player's vertical position (top ↔ bottom of the screen). This is not a gradual movement; it is an instant toggle that creates a binary lane system. The mechanic must be visible in the source code as a distinct function (`FlipGravity`) and in the UI as an instant visual transition.
+## 差別化メカニクス
 
-## Qualitative Requirements → Observable Criteria
+### 1. 軌道回転 (Orbital Rotation)
 
-| Qualitative Term | Observable Criterion |
-|---|---|
-| 新規性 (Novel) | Gravity flip mechanic implemented as a distinct toggle, not present in standard invader games |
-| 楽しい (Fun) | Smooth 60fps gameplay, responsive controls (<100ms input lag), satisfying visual feedback on hits |
-| ポップ (Playful) | Bright color palette, simple particle effects on enemy destruction, cheerful sound cues |
-| シンプル (Simple) | Single screen, no menus beyond start/game over, one primary control (spacebar for gravity flip) |
-| Production-ready | Runs locally via `go run`, builds via Docker, deploys via Helm chart, passes CI checks |
+敵は中心点の周りを一定速度で回転。プレイヤーは敵の位置を予測して撃つ必要がある。
 
-## Non-Goals
+**観測可能基準:**
+- 敵は画面中央の周りを円運動する
+- 敵の回転速度はウェーブごとに上昇
+- 弾は直進し、回転する敵に命中する
 
-- Multiplayer or online leaderboards
-- Complex power-ups or item systems
-- Persistent save states or account systems
-- Mobile touch controls (keyboard only for Sprint 1)
-- Complex audio (placeholder sounds or silent for Sprint 1)
+### 2. カラースキム (Color Skew)
 
-## Sprint 1 Acceptance Criteria
+敵は赤・青・黄の3色。自機も3色の武器を持ち、ボタン切り替えで変更可能。
+同じ色の敵のみが破壊可能。
 
-- [ ] Game renders in browser at `http://localhost:8080/` with playable invader game
-- [ ] Gravity flip mechanic works: spacebar toggles player between top and bottom lanes
-- [ ] Enemies spawn in waves and descend toward the player
-- [ ] Player can shoot and destroy enemies
-- [ ] Collision detection works (player loses life on enemy contact)
-- [ ] Game over screen displays score and restart option
-- [ ] Go server starts cleanly with health endpoint at `/health`
-- [ ] Docker build succeeds and container runs
-- [ ] Helm chart deploys to Kubernetes (Service, Deployment, probes)
-- [ ] GitHub Actions CI passes (build, test, lint)
-- [ ] README documents how to run, validate, and deploy
+**観測可能基準:**
+- 敵は3色のいずれかで描画される
+- 自機は3色の武器を切り替え可能
+- 色の異なる敵には弾が貫通する
 
-## Product Title
+### 3. 軌道崩壊 (Orbital Decay)
 
-**Gravity Invaders** (used consistently in UI, docs, and code comments)
+敵を破壊すると、残りの敵の軌道半径が縮小し、回転速度が上昇。
 
-## Primary Served Path
+**観測可能基準:**
+- 敵を1体破壊するごとに、残りの敵の軌道が縮小
+- 軌道半径が最小に達すると、敵は直進モードに切り替わる
 
-`GET /` → serves the game UI (HTML + embedded CSS/JS or static assets from `client/`)
+## 受入基準 (Acceptance Criteria)
 
-## Repository Layout
+### AC-1: 軌道回転が動作する
+- [ ] 敵が画面中央の周りを円運動する
+- [ ] 回転速度はウェーブごとに上昇する
+- [ ] プレイヤーの弾が回転する敵に命中する
+
+### AC-2: カラースキムが動作する
+- [ ] 敵は3色（赤・青・黄）のいずれかで出現する
+- [ ] プレイヤーは3色の武器を切り替え可能
+- [ ] 色の異なる敵には弾が貫通する
+- [ ] 同じ色の敵のみが破壊可能
+
+### AC-3: ゲームフローが完結する
+- [ ] ウェーブクリア時に次のウェーブへ遷移
+- [ ] 全ウェーブクリアでゲームクリア表示
+- [ ] ライフが0でゲームオーバー表示
+- [ ] ゲームオーバーからリスタート可能
+
+### AC-4: UIが明確
+- [ ] スコア表示
+- [ ] ライフ表示
+- [ ] 現在のウェーブ表示
+- [ ] 現在の武器色表示
+
+## 非目標 (Non-Goals)
+
+- マルチプレイヤー
+- 高スコアランキング（ローカルストレージのみ）
+- サウンドエフェクト（Sprint 1では省略）
+- モバイル対応（Sprint 1では省略）
+- 複雑なストーリー
+- 外部サービス連携
+
+## 定性的要求の観測可能変換
+
+| 要求 | 観測可能基準 |
+|------|-------------|
+| 新規性 | 敵が回転する。従来のインベーダーにはない mechanic |
+| 楽しい | 軌道予測 + カラースキムの組み合わせが中程度の難易度を提供 |
+| ポップ | 3色のビビッドなカラーパレット、シンプルな形状 |
+| シンプル | 操作は左右移動 + 発射 + 色切り替えの3つだけ |
+| production-ready | Go net/http で提供、Docker/Helm 対応、テスト含む |
+
+## 技術スタック
+
+- **Backend:** Go (net/http)
+- **Frontend:** HTML5 Canvas + Vanilla JavaScript
+- **パッケージング:** Docker, Helm
+- **CI:** GitHub Actions
+
+## ファイル構成 (予定)
 
 ```
-├── server/          # Go HTTP server and backend logic
-├── client/          # Browser assets (HTML, CSS, JS)
-├── docs/            # Product brief, artifact contract, validation notes
-├── charts/          # Helm chart for Kubernetes deployment
-├── Dockerfile       # Container build
-├── go.mod           # Go module definition
-├── README.md        # Entry point documentation
-└── .github/         # CI workflows
+├── client/          # フロントエンド (HTML/CSS/JS)
+├── server/          # Go HTTP サーバー
+├── charts/          # Helm chart
+├── docs/            # ドキュメント
+├── Dockerfile
+├── README.md
+└── go.mod
 ```
