@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Star Drift - インベーダーゲーム</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div id="game-container">
+    <header id="hud">
+      <div id="score">Score: 0</div>
+      <div id="lives">Lives: 3</div>
+      <div id="level">Level: 1</div>
+    </header>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <footer id="instructions">
+      <span>← → : Move</span>
+      <span>Space : Shoot</span>
+      <span>P : Pause</span>
+    </footer>
+  </div>
+  <div id="overlay" class="hidden">
+    <div id="overlay-content">
+      <h1 id="overlay-title">Star Drift</h1>
+      <p id="overlay-message">Press Space to Start</p>
+    </div>
+  </div>
+  <script src="/script.js"></script>
+</body>
+</html>
