@@ -1,48 +1,31 @@
-# Pop Invader
+# One-Button Invaders
 
-Pop Invader は、シンプルでポップなデザインの新規性のあるインベーダーゲームです。
-Go 製の軽量 HTTP サーバーと静的フロントエンドで構成され、ブラウザで即座にプレイできます。
+This repository started empty. ARUN generated a minimal static browser game with a gravity-lane mechanic so an implementation-heavy scrum workflow can produce reviewable code, documentation, and validation artifacts without GitHub API calls.
 
-## 主な特徴
+## Repository layout
 
-- 🚀 **軽量な Go HTTP サーバー**: 外部依存なしで動作する高速なバックエンド
-- 🎮 **シンプルでポップな UI**: 直感的な操作と視覚的な魅力
-- 🏥 **ヘルスチェック**: `/healthz` エンドポイントによる健全性確認
-- 📦 **コンテナ対応**: Dockerfile と Kubernetes 対応の Helm チャートを含む
+- `server/` contains the Go HTTP entrypoint.
+- `client/` contains the browser UI served from `/`.
+- `charts/` and `k8s/` contain deployment artifacts when present.
+- `docs/` contains product and validation notes.
 
-## 始め方
+## Features
 
-### ローカルでの実行
+- Keyboard controls with ArrowLeft, ArrowRight, and Space.
+- Space flips the defender between floor and ceiling gravity lanes.
+- Score display that increments only when the defender is horizontally aligned and on the same gravity lane as the invader.
+- Lives tracking that decrements when an invader reaches the bottom of the arena.
+- Restart behavior that resets score, lives, player position, and invader position.
 
-```bash
-# 依存関係のインストール
-go mod tidy
+## Run
 
-# ローカルサーバーの起動
-go run ./server/cmd/main.go
+Run the Go server with `go run ./server` and open `http://127.0.0.1:8080/`, or open `client/index.html` directly for a static browser review.
 
-# ブラウザでアクセス
-open http://localhost:8080
+## Validate
+
+```sh
+npm test
+npm run build
 ```
 
-### 検証
-
-- `/healthz` にアクセスし、`200 OK` を確認します。
-- `/` にアクセスし、ゲーム画面が表示されることを確認します。
-
-## アーキテクチャ
-
-- `server/`: Go バックエンド（HTTP サーバー、ロジック）
-- `client/`: フロントエンドアセット（HTML, CSS, JS）
-- `docs/`: 製品ドキュメント（製品概要、契約書）
-- `charts/`: Kubernetes/Helm チャート
-
-## 次のステップ
-
-- ゲームロジックの実装
-- CI/CD パイプラインの強化
-- Kubernetes へのデプロイ
-
-## ライセンス
-
-このプロジェクトは MIT ライセンスの下で提供されます。
+Both scripts use `node --check` and do not require package installation.
