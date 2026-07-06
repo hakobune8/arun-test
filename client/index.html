@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rhythm Invaders - リズムインベーダー</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <header id="game-header">
+      <h1>Rhythm Invaders</h1>
+      <div id="score-display">Score: <span id="score">0</span></div>
+      <div id="combo-display">Combo: <span id="combo">0</span>x</div>
+    </header>
+    <div id="beat-indicator">
+      <div id="beat-bar"></div>
+      <div id="beat-label">BEAT</div>
+    </div>
+    <canvas id="game-canvas" width="800" height="600"></canvas>
+    <div id="controls">
+      <p>← → : Move &nbsp;|&nbsp; SPACE : Shoot (on beat for bonus!)</p>
+    </div>
+    <div id="start-screen">
+      <h2>Ready to Rhythm?</h2>
+      <p>Shoot enemies on the beat for bonus damage!</p>
+      <button id="start-btn">Start Game</button>
+    </div>
+    <div id="game-over-screen" class="hidden">
+      <h2>Game Over</h2>
+      <p>Final Score: <span id="final-score">0</span></p>
+      <p>Best Combo: <span id="best-combo">0</span>x</p>
+      <button id="restart-btn">Play Again</button>
+    </div>
+  </div>
+  <script src="/assets/game.js"></script>
+</body>
+</html>
