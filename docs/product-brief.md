@@ -1,24 +1,68 @@
-# Product Brief: One-Button Invaders
+# Product Brief: Retro Space Defender
 
 ## Concept
 
-One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+**Retro Space Defender** — シールド減衰メカニクスを持つレトロ風スペースインベーダーゲーム。
+
+プレイヤーは宇宙防衛戦士として、波状に襲いかかる敵インベーダーを撃退する。従来のインベーダーゲームとの差別化は、**シールド減衰（Shield Decay）** システムにある。
 
 ## Target User
 
-- Players who want a short arcade loop with one clear twist.
-- Reviewers who need a fresh-checkout slice that runs without external services.
+- レトロゲームを好むカジュアルゲーマー
+- シンプルな操作で没入感を得たいプレイヤー
+- スコア競争よりもゲームプレイの戦略性を求める層
+
+## Core Loop
+
+1. **敵の出現** — 波状に敵インベーダーが上から下降
+2. **シールド管理** — シールドは時間とともに減衰（0〜100%）
+3. **敵の撃破** — 敵を撃つとスコア加算＋シールド回復アイテムドロップ
+4. **シールド充填** — アイテムを取得してシールドを回復
+5. **ゲームオーバー判定** — シールドが0%かつ敵が画面下部に到達
+
+## Differentiating Behavior
+
+### シールド減衰（Shield Decay）
+
+- シールドは毎秒1%減衰（設定可能）
+- 敵を撃破すると確率でシールド回復アイテムをドロップ
+- アイテム取得でシールドが+15%回復（最大100%）
+- シールド0%で敵が画面下部に到達するとゲームオーバー
+- このメカニクスにより、単なる連射ではなく**戦略的な敵選別**が要求される
+
+### レトロ表現
+
+- ピクセルアート風のCSSレンダリング
+- 8ビット風サウンドエフェクト（Web Audio API）
+- CRTモニター風のスクリーンエフェクト
 
 ## Acceptance Criteria
 
-- The visible title, README H1, and this product brief use the same product name.
-- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
-- Space changes the gravity lane between Floor and Ceiling.
-- A score is awarded only when the defender is aligned with the invader and on the same lane.
-- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
+| ID | 要求 | 観測可能な検証方法 |
+|----|------|-------------------|
+| AC-01 | ゲームはブラウザで動作する | `localhost:8080` にアクセスしてゲーム画面が表示される |
+| AC-02 | シールド減衰が実装されている | ゲーム開始後、シールドバーが時間とともに減少する |
+| AC-03 | 敵の撃破でスコア加算 | 敵を撃つとスコアが+100される |
+| AC-04 | シールド回復アイテムがドロップ | 敵撃破時にアイテムが出現し、取得でシールドが回復する |
+| AC-05 | ゲームオーバー判定 | シールド0%かつ敵が画面下部に到達でゲームオーバー画面が表示される |
+| AC-06 | 新規性（シールド減衰） | シールドメカニクスがゲームプレイの中心にあり、戦略性を生む |
+| AC-07 | レトロ表現 | ピクセル風UI、CRTエフェクト、8ビット風サウンドが実装されている |
+| AC-08 | シンプルな操作 | キーボード操作（矢印キー＋スペース）でゲーム可能 |
 
 ## Non-Goals
 
-- Multiplayer.
-- External score services.
-- Complex level progression.
+- マルチプレイヤー機能
+- 外部サービス連携（スコアランキング等）
+- モバイルタッチ操作
+- 複雑なストーリーモード
+- 本番データベース持久化
+
+## Quality Translation
+
+| 定性的要求 | 観測可能な基準 |
+|-----------|---------------|
+| 新規性 | シールド減衰メカニクスが実装され、ゲームプレイに戦略性をもたらす |
+| 楽しい | シールド管理と敵撃破のサイクルが明確で、プレイヤーが意図的に行動できる |
+| ポップ | 鮮やかなカラーパレット、CRTエフェクト、アニメーションが実装されている |
+| シンプル | キーボード操作のみでゲーム可能、UIが直感的 |
+| Production-ready | Dockerビルド成功、HelmチャートでK8sデプロイ可能、CIパス |
