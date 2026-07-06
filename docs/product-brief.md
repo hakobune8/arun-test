@@ -1,24 +1,38 @@
-# Product Brief: One-Button Invaders
+# Product Brief: GravInvader (重力インベーダー)
 
-## Concept
+## 概要
+GravInvaderは、クラシックなインベーダーゲームのメカニクスをベースにしつつ、プレイヤーの「重力反転」をコア機能として取り入れた新規性の高いアーケードゲームです。
 
-One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+## 対象ユーザー
+- レトロゲームやアーケードゲームを好むカジュアルゲーマー
+- シンプルな操作で没入感のあるゲーム体験を求めるユーザー
 
-## Target User
+## コアループ（ワークフロー）
+1. **移動**: 矢印キーまたはA/Dキーで左右に移動。
+2. **射撃**: スペースキーで弾を発射。
+3. **重力反転**: 弾を発射すると同時に、プレイヤーの重力が反転（画面の上下が入れ替わる）。
+4. **回避とスコアリング**: 敵弾を回避しつつ、敵を撃破してスコアを稼ぐ。
+5. **ゲームオーバー**: 敵弾に当たった場合、または敵が画面下部に到達した場合、ゲームオーバー。
 
-- Players who want a short arcade loop with one clear twist.
-- Reviewers who need a fresh-checkout slice that runs without external services.
+## 差別化される行動（Differentiating Behavior）
+- **重力反転メカニクス**: 従来のインベーダーゲームでは左右移動が中心ですが、本ゲームでは「射撃＝重力反転」がトリガーとなり、プレイヤーは画面の上下をまたいで敵を回避・攻撃する必要があります。これにより、従来の2Dシューティングとは異なる空間認識と反応速度が要求されます。
 
-## Acceptance Criteria
+## 受入基準（Acceptance Criteria）
+- [ ] プレイヤーは左右移動と射撃（重力反転）の操作が可能である。
+- [ ] 弾を発射すると、プレイヤーの重力が反転し、画面の上下が入れ替わる。
+- [ ] スコアがリアルタイムで表示され、敵を撃破すると増加する。
+- [ ] 敵弾に当たるとゲームオーバーとなり、スコア表示とリトライオプションが表示される。
+- [ ] 敵が画面下部に到達するとゲームオーバーとなる。
 
-- The visible title, README H1, and this product brief use the same product name.
-- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
-- Space changes the gravity lane between Floor and Ceiling.
-- A score is awarded only when the defender is aligned with the invader and on the same lane.
-- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
+## 非目標（Non-Goals）
+- マルチプレイヤー機能
+- 複雑なレベルデザインやボス戦
+- オンラインリーダーボードやユーザーアカウント
+- 高度なサウンドエフェクトやビジュアルエフェクト（Sprint 1では最小限の実装に留める）
 
-## Non-Goals
-
-- Multiplayer.
-- External score services.
-- Complex level progression.
+## QA検証基準（Observable Criteria）
+- **新規性**: 重力反転メカニクスが明確に実装されており、従来のインベーダーゲームとは異なる操作体験が提供される。
+- **楽しい**: 重力反転による戦略的な回避と攻撃が可能であり、ゲームオーバーまでのループが短く、リトライしやすい。
+- **ポップ**: 視覚的に明瞭な配色とシンプルなUIで、ゲームの状態（プレイヤー位置、敵の位置、スコア）が一目で把握できる。
+- **シンプル**: 操作説明が不要なほど直感的な操作体系であり、設定画面や複雑なメニューがない。
+- **Production-ready**: ローカル環境で安定して動作し、DockerおよびKubernetesへのデプロイが可能である。
