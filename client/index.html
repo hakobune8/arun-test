@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ポップインベーダー</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <h1>ポップインベーダー</h1>
+    <div id="score">スコア: 0</div>
+    <canvas id="game-canvas" width="480" height="640"></canvas>
+    <div id="controls">
+      <p>← → で移動 | スペースで発射</p>
+    </div>
+    <div id="game-over" class="hidden">
+      <h2>ゲームオーバー</h2>
+      <p id="final-score"></p>
+      <button id="restart-btn">もう一度</button>
+    </div>
+  </div>
+  <script src="/script.js"></script>
+</body>
+</html>

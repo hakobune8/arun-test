@@ -1,128 +1,78 @@
 # Artifact Contract
 
-この文書は、Sprint 1 の実装におけるファイル構成、ルーティング、パッケージング、検証手順の契約（Contract）を定義します。
+この文書は、`docs/product-brief.md` の製品要件を実装成果物へ接続する source of truth です。QA、レビュー、実装のいずれもこの contract に従って検証してください。
 
-## 1. リポジトリレイアウト
+## 1. Product Brief 参照
 
-関心を分離し、拡張性を確保するため、以下のディレクトリ構成を採用します。
+- **Product Brief**: `docs/product-brief.md`
+- **Concept**: 新規性のあるインベーダーゲーム（ポップでシンプル、ブラウザで動作）
+- **Primary User Path**: ブラウザで `/` にアクセス → ゲーム画面が表示 → 操作可能
 
-```
-.
-├── server/          # Go HTTP サーバーとバックエンドロジック
-│   ├── main.go      # エントリポイント
-│   ├── handlers/    # HTTP ハンドラー
-│   └── game/        # ドメインロジック（将来の分離用）
-├── client/          # ブラウザフロントエンド
-│   ├── index.html   # ゲーム画面のエントリポイント
-│   ├── style.css    # スタイル定義
-│   └── script.js    # クライアントロジック
-├── charts/          # Helm チャート（Kubernetes 展開用）
-│   └── arun-test/
-├── docs/            # 製品仕様と検証ドキュメント
-│   ├── product-brief.md
-│   └── artifact-contract.md
-├── Dockerfile       # コンテナビルド定義
-├── go.mod           # Go モジュール定義（ルートまたは server/配下）
-└── README.md        # プロジェクト概要
-```
+## 2. Primary Route
 
-## 2. Primary Route（主要ルート）
+| Route | 説明 | 実装ファイル |
+|-------|------|-------------|
+| `/` | メインゲーム画面（HTML + 埋め込み CSS/JS） | `server/main.go` の `handleIndex` |
+| `/healthz` | ヘルスチェックエンドポイント | `server/main.go` の `handleHealthz` |
+| `/assets/style.css` | ゲームスタイルシート | `server/main.go` の `handleAssets` |
+| `/assets/game.js` | ゲームロジック | `server/main.go` の `handleAssets` |
 
-- **URL**: `GET /`
-- **説明**: ゲームのメイン画面（`client/index.html`）を提供します。
-- **期待される動作**: ブラウザでアクセスすると、インベーダーゲームの UI が表示され、操作可能であること。
+## 3. Frontend
 
-## 3. Frontend 契約
+| 項目 | 詳細 |
+|------|------|
+| **ディレクトリ** | `client/` |
+| **エントリーポイント** | `client/index.html` |
+| **CSS** | `client/assets/style.css` |
+| **JS** | `client/assets/game.js` |
+| **Go からの提供** | `server/main.go` で `embed.FS` を使用し、`client/` 配下の全アセットを `/assets/` にマウント |
 
-- **ディレクトリ**: `client/`
-- **エントリポイント**: `client/index.html`
-- **必須アセット**:
-  - `client/style.css`: ゲームの視覚的スタイル。
-  - `client/script.js`: ゲームのクライアント側ロジック（描画、入力処理）。
-- **要件**: 
-  - 外部 CDN 依存を最小限にし、ローカルアセットで動作すること。
-  - Canvas または DOM を使用したゲーム描画が初期状態で表示されること。
+## 4. Backend
 
-## 4. Backend 契約
+| 項目 | 詳細 |
+|------|------|
+| **Go モジュールパス** | `github.com/hakobune8/arun-test` |
+| **エントリーポイント** | `server/main.go` |
+| **依存関係** | 標準ライブラリのみ（`net/http`, `embed`, `log`, `os`） |
+| **構成** | 環境変数 `PORT`（デフォルト: `8080`） |
 
-- **モジュールパス**: `github.com/hakobune8/arun-test/server` （またはローカルビルド用として `server`）
-- **エントリポイント**: `server/main.go`
-- **ロジック分離**: 
-  - HTTP ハンドラーは `server/handlers/` に配置。
-  - ゲームのドメインロジックは将来 `server/game/` へ分離可能にする。
-- **要件**:
-  - `client/` ディレクトリを静的ファイルとして提供すること。
-  - 外部サービスなしでローカルで起動・動作すること。
+## 5. Deployment
 
-## 5. Served Routes（提供されるルート）
+| 項目 | 詳細 |
+|------|------|
+| **Dockerfile** | `Dockerfile`（multi-stage build） |
+| **Helm Chart** | `charts/arun-test/` |
+| **K8s Manifests** | `k8s/`（Deployment, Service） |
+| **Service Type** | ClusterIP（Ingress なし） |
+| **Probes** | Liveness: `/healthz`, Readiness: `/healthz` |
+| **Resource Defaults** | requests: 32Mi/50m, limits: 128Mi/200m |
 
-| Method | Path           | 説明                          | 提供ファイル/レスポンス      |
-|--------|----------------|-------------------------------|-----------------------------|
-| GET    | `/`            | ゲームメイン画面              | `client/index.html`         |
-| GET    | `/style.css`   | スタイルシート                | `client/style.css`          |
-| GET    | `/script.js`   | スクリプトファイル            | `client/script.js`          |
-| GET    | `/health`      | ヘルスチェック                | `200 OK`                    |
+## 6. Validation Commands
 
-## 6. Docker / Helm パッケージング期待値
+| チェック | コマンド |
+|---------|---------|
+| **ビルド** | `go build ./...` |
+| **テスト** | `go test ./...` |
+| **ローカル実行** | `PORT=8080 go run server/main.go` |
+| **ヘルスチェック** | `curl http://localhost:8080/healthz` |
+| **メイン画面** | `curl http://localhost:8080/` |
+| **アセット提供** | `curl http://localhost:8080/assets/style.css` |
+| **Docker ビルド** | `docker build -t arun-test .` |
+| **Helm lint** | `helm lint charts/arun-test/` |
 
-- **Dockerfile**:
-  - ルートディレクトリまたは `server/` に配置。
-  - Multi-stage build を推奨（ビルド環境とランタイム環境の分離）。
-  - 最終イメージは `server/main.go` を実行するものとする。
-- **Helm Chart**:
-  - ディレクトリ: `charts/arun-test/`
-  - 必須リソース: `Deployment`, `Service`。
-  - ラベルとセレクターの一貫性を保つこと。
-  - Ingress は含めない（Sprint 1 の範囲外）。
+## 7. QA 検証ポイント
 
-## 7. 検証コマンド（Validation Commands）
+1. `/` にアクセスするとゲームタイトルと操作説明が表示される
+2. `/healthz` が `200 OK` を返す
+3. `/assets/style.css` と `/assets/game.js` が正常に提供される
+4. ゲーム画面でキーボード操作（矢印キー + スペース）でプレイヤー移動と弾発射が可能
+5. 敵が画面を移動し、弾が敵に当たると消滅する
+6. Docker イメージが正常にビルドされる
+7. Helm chart が `helm lint` をパスする
 
-以下のコマンドは、実装の正しさを確認するために使用します。
+## 8. Concept Drift 防止
 
-### ビルド検証
-```bash
-# Go バックエンドのビルド
-go build ./server/...
-
-# クライアントアセットの確認
-ls -la client/
-```
-
-### ローカル実行
-```bash
-# サーバーの起動
-go run ./server/main.go
-
-# ブラウザでアクセス
-open http://localhost:8080
-```
-
-### コンテナ化検証
-```bash
-# Docker イメージのビルド
-docker build -t arun-test:latest .
-
-# コンテナの実行
-docker run -p 8080:8080 arun-test:latest
-```
-
-### Helm 検証
-```bash
-# Helm チャートの lint
-helm lint charts/arun-test/
-```
-
-## 8. 変更対象ファイル一覧
-
-Sprint 1 で新規作成または更新が予定されているファイル:
-
-- `docs/product-brief.md` (新規)
-- `docs/artifact-contract.md` (新規/更新)
-- `server/main.go` (新規)
-- `server/handlers/` (新規)
-- `client/index.html` (新規)
-- `client/style.css` (新規)
-- `client/script.js` (新規)
-- `Dockerfile` (新規)
-- `charts/arun-test/` (新規)
-- `README.md` (新規/更新)
+- 製品名は **「Pop Invaders」** のみを使用
+- 差別化 mechanic: **「ポップなビジュアル + シンプルな操作 + リズム感ある敵の動き」**
+- 複数の product brief、別名、矛盾した mechanic を作成しない
+- 変更時はこの contract を更新し、product-brief.md と同期する
