@@ -1,36 +1,24 @@
-# Neon Orbit — Product Brief
+# Product Brief: One-Button Invaders
 
 ## Concept
-Neon Orbit は、軌道を描く敵を回避しながら射撃するインベーダーゲーム。従来の「上から降ってくる敵」ではなく、プレイヤーの周りを円軌道で回る敵を、角度計算で狙撃する。シンプルながら戦略的なプレイが特徴。
+
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
 ## Target User
-- シンプルなアーケードゲームを好むカジュアルゲーマー
-- 短時間で遊べるミニマルなゲームを求めているユーザー
-- レトロなビジュアルとポップな音楽を好む層
 
-## Core Loop
-1. プレイヤーは画面下部で左右移動
-2. 敵がプレイヤーの周りを円軌道で回転しながら降下
-3. プレイヤーは敵の軌道を予測して射撃
-4. 全敵撃破で次のステージ（回転速度・パターン変化）
-5. 敵に衝突または画面下端到達でゲームオーバー
-
-## Differentiating Behavior
-- **軌道予測射撃**: 敵が円運動するため、単純な照準ではなく軌道読みが重要
-- **ネオンビジュアル**: 発光エフェクトと残像でポップな雰囲気
-- **ミニマル操作**: 矢印キー（移動）+ スペース（射撃）のみ
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
 ## Acceptance Criteria
-| 定性要求 | 観測可能な基準 |
-|---------|--------------|
-| 新規性 | 敵が円軌道で移動する mechanic が実装されている |
-| 楽しい | 敵を撃破するフィードバック（エフェクト/スコア表示）がある |
-| ポップ | ネオンカラーの発光エフェクトが適用されている |
-| シンプル | 操作は矢印キー＋スペースのみ、UI は最小限 |
-| Production-ready | /healthz エンドポイントが存在し、200 OK を返す |
+
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
 
 ## Non-Goals
-- マルチプレイヤー機能
-- 外部サービス連携（スコアランキング等）
-- 複雑なストーリー展開
-- モバイル対応（Sprint 1 では対象外）
+
+- Multiplayer.
+- External score services.
+- Complex level progression.

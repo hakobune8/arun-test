@@ -1,33 +1,34 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neon Orbit - インベーダーゲーム</title>
-  <link rel="stylesheet" href="/style.css">
-</head>
-<body>
-  <div id="game-container">
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <div id="ui-overlay">
-      <div id="score">Score: 0</div>
-      <div id="lives">Lives: 3</div>
-      <div id="level">Level: 1</div>
-    </div>
-    <div id="start-screen">
-      <h1>NEON ORBIT</h1>
-      <p>回転する宇宙船で、軌道を描く敵を撃ち落とせ！</p>
-      <button id="start-btn">ゲームスタート</button>
-      <div id="controls">
-        <p>← → : 移動 | ↑ : 回転 | ↓ : 逆回転 | Space : 発射</p>
-      </div>
-    </div>
-    <div id="game-over" class="hidden">
-      <h2>GAME OVER</h2>
-      <p id="final-score">Score: 0</p>
-      <button id="restart-btn">もう一度プレイ</button>
-    </div>
-  </div>
-  <script src="/app.js"></script>
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>One-Button Invaders</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="app-title">
+        <p class="eyebrow">Static browser game</p>
+        <h1 id="app-title">One-Button Invaders</h1>
+        <p class="summary">Shift gravity lanes, line up with the invader, and survive a compact arcade loop without backend services.</p>
+      </section>
+      <section class="hud" aria-label="Game status">
+        <span>Score: <strong id="score">0</strong></span>
+        <span>Lives: <strong id="lives">3</strong></span>
+        <span>Gravity: <strong id="gravity">Floor</strong></span>
+        <span>Target: <strong id="target-lane">Floor</strong></span>
+        <span id="status" aria-live="polite">Ready</span>
+      </section>
+      <section class="arena" aria-label="Game arena">
+        <div id="player" class="player" aria-label="Player defender"></div>
+        <div id="invader" class="invader" aria-label="Falling invader"></div>
+      </section>
+      <section class="controls" aria-label="Controls">
+        <p>Use ArrowLeft and ArrowRight to move. Press Space to flip gravity between floor and ceiling; score only when aligned on the same lane as the invader.</p>
+        <button id="restart" type="button">Restart</button>
+      </section>
+    </main>
+    <script type="module" src="./src/main.js"></script>
+  </body>
 </html>
