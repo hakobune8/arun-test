@@ -1,24 +1,81 @@
-# Product Brief: One-Button Invaders
+# プロダクトブリーフ: 重力反転インベーダー (Gravity Flip Invaders)
 
-## Concept
+## 1. コンセプト
 
-One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+プレイヤーが宇宙船を操作し、敵インベーダーを倒すクラシックなアーケードゲームに、**画面の上下で重力が反転する**という差別化メカニクスを追加したインベーダーゲーム。
 
-## Target User
+プレイヤーはスペースキーで重力を反転させ、画面の上下を自由に移動しながら敵を攻撃する。敵もまた、画面端で跳ね返り、ランダムに重力を反転させる。
 
-- Players who want a short arcade loop with one clear twist.
-- Reviewers who need a fresh-checkout slice that runs without external services.
+## 2. 対象ユーザー
 
-## Acceptance Criteria
+- クラシックなアーケードゲームを好むカジュアルゲーマー
+- シンプルだが戦略的なゲームプレイを求めるプレイヤー
+- 短時間で遊べるモバイル/ブラウザゲームを好むユーザー
 
-- The visible title, README H1, and this product brief use the same product name.
-- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
-- Space changes the gravity lane between Floor and Ceiling.
-- A score is awarded only when the defender is aligned with the invader and on the same lane.
-- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
+## 3. コアループ
 
-## Non-Goals
+1. プレイヤーは画面下部の宇宙船で敵インベーダーを攻撃する
+2. スペースキーで重力を反転（画面上部⇔下部）
+3. 敵インベーダーを全滅させると次のステージへ
+4. 敵の弾に当たるとライフを失う
+5. ライフが0になるとゲームオーバー
 
-- Multiplayer.
-- External score services.
-- Complex level progression.
+## 4. 差別化要素
+
+- **重力反転メカニクス**: スペースキー1つで画面の上下を移動可能
+- **敵のランダム重力反転**: 敵が突然重力を反転させ、プレイヤーの予測を困難にする
+- **シンプル操作**: 矢印キーで左右移動、スペースキーで重力反転、クリックで発射
+
+## 5. 受入基準 (Acceptance Criteria)
+
+### AC-1: ゲームプレイ
+- [ ] プレイヤーは矢印キーで左右に移動できる
+- [ ] プレイヤーはスペースキーで重力を反転できる
+- [ ] プレイヤーはクリック/Enterで弾を発射できる
+- [ ] 弾が敵に当たると敵が破壊され、スコアが加算される
+- [ ] 敵の弾がプレイヤーに当たるとライフが減少する
+- [ ] 全敵を破壊すると次のステージへ進む
+- [ ] ライフが0になるとゲームオーバー画面が表示される
+
+### AC-2: 重力反転メカニクス
+- [ ] 重力反転時、プレイヤーは画面の反対側に移動する
+- [ ] プレイヤーは画面の上下両方で弾を発射できる
+- [ ] 敵は画面端で跳ね返る
+- [ ] 敵はランダムに重力を反転させる（確率: ステージごとに調整可能）
+
+### AC-3: UI/UX
+- [ ] ゲーム画面にタイトル「重力反転インベーダー」が表示される
+- [ ] スコア、ライフ、ステージ番号が画面に表示される
+- [ ] ゲームオーバー画面に「もう一度プレイ」ボタンが表示される
+- [ ] スタート画面に操作方法の説明が表示される
+
+### AC-4: 新規性
+- [ ] 重力反転メカニクスが実装されている（ラベル変更だけのgeneric shellではない）
+- [ ] 敵のランダム重力反転が実装されている
+
+### AC-5: シンプルさ
+- [ ] 操作は矢印キー、スペースキー、クリックの3つのみ
+- [ ] UIは最小限の要素で構成される
+
+### AC-6: 生産性
+- [ ] Dockerでビルド・実行可能
+- [ ] Kubernetesにデプロイ可能
+- [ ] CIパイプラインでテストが実行される
+
+## 6. Non-Goals
+
+- マルチプレイヤー機能
+- 高スコアランキング（ローカルストレージのみ）
+- サウンドエフェクト（Sprint 2以降の検討）
+- モバイルタッチ操作（Sprint 2以降の検討）
+- 複雑なステージデザイン
+
+## 7. 定性的要求のobservable criteria
+
+| 定性的要求 | Observable Criteria |
+|-----------|-------------------|
+| 新規性 | 重力反転メカニクスと敵のランダム重力反転が実装されている |
+| 楽しい | コアループが明確で、操作が直感的 |
+| ポップ | 明るいカラーパレット、簡潔なUI |
+| シンプル | 操作は3つのみ、UIは最小限 |
+| production-ready | Docker/K8sデプロイ可能、CIテスト通過 |
