@@ -1,33 +1,36 @@
-# Artifact Contract
+# Artifact Contract: One-Button Invaders
 
-## Overview
-This document serves as the implementation contract connecting the product brief to the codebase. It defines the file layout, primary routes, entry points, and validation commands.
+This contract is the implementation source of truth for how generated artifacts connect. Product intent lives in `docs/product-brief.md`; this file defines the route, file, module, and validation expectations that backend, frontend, QA, Docker, Helm, and documentation work must preserve.
 
-## File Layout
-- `server/`: Go HTTP server and backend logic.
-- `client/`: Browser assets (HTML, CSS, JS) for the game UI.
-- `docs/`: Product brief, artifact contract, and validation notes.
-- `charts/`: Helm charts for Kubernetes deployment.
+## Primary route
 
-## Primary Route
-- `GET /`: Serves the main game UI (`client/index.html`).
-- `GET /health`: Health check endpoint.
-
-## Backend
-- **Module Path:** `github.com/hakobune8/arun-test`
-- **Entrypoint:** `server/main.go`
-- **Logic:** `server/handler.go` (HTTP handlers), `server/game.go` (Game logic)
+- `/` serves the primary browser experience.
+- `/healthz` returns a JSON health response.
 
 ## Frontend
-- **Entrypoint:** `client/index.html`
-- **Assets:** `client/style.css`, `client/app.js`
+
+- Directory: `client/`.
+- Package file: `client/package.json`.
+- Entrypoint: `client/index.html`.
+- Required local assets: `client/styles.css` and `client/src/main.js`.
+- HTML must not reference local CSS or JavaScript files that are absent from the repository.
+
+## Backend
+
+- Language: Go.
+- Module path: `github.com/hakobune8/arun-test/server`.
+- Module file: `server/go.mod`.
+- Entrypoint: `server/main.go`.
+- The Go server must serve `/` from `client/index.html` and must serve every local CSS or JavaScript file referenced by that HTML.
 
 ## Deployment
-- **Dockerfile:** Root directory
-- **Helm Chart:** `charts/arun-test/`
 
-## Validation Commands
-- `go build ./...`
-- `go test ./...`
-- `docker build -t arun-test .`
-- `helm lint charts/`
+- Docker and Kubernetes artifacts must package the same backend and frontend paths defined above.
+- Helm chart templates must expose the application service and health checks without introducing a separate product path.
+
+## Validation
+
+- `cd server && go test ./...` passes when Go tooling is available.
+- `cd server && go vet ./...` passes when Go tooling is available.
+- Frontend smoke validation confirms `/` returns HTML and that referenced local CSS/JS assets exist and are served.
+- QA must treat any mismatch between this contract and repository artifacts as release-blocking.

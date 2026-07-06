@@ -1,64 +1,24 @@
-# Pixel Drifter — Product Brief
+# Product Brief: One-Button Invaders
 
 ## Concept
 
-**Pixel Drifter** は、ミニマルなインベーダーゲームです。プレイヤーは画面下部のドローンを操作し、上から降ってくる敵を撃ち落とします。従来のインベーダーゲームとの違いは、**ドローンが「浮遊」する挙動**にあります。重力を感じさせない滑らかな移動と、敵との衝突時に発生するパーティクルエフェクトが、ポップで心地よいゲーム体験を提供します。
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
 ## Target User
 
-- ブラウザで手軽にプレイできるカジュアルゲーマー
-- 短いプレイセッションを好むユーザー
-- レトロな雰囲気とモダンなUIの両方を求めるユーザー
-
-## Core Loop
-
-1. ドローンを左右に移動
-2. 敵を撃ち落とす
-3. パーティクルエフェクトで撃破のフィードバックを得る
-4. 敵が画面下部に到達する前に全敵を撃破
-5. 全敵撃破で次のステージへ
-
-## Differentiating Behavior
-
-- **浮遊移動**: ドローンはキー入力に対して即座に停止せず、慣性を感じさせる滑らかな移動を行う
-- **パーティクルフィードバック**: 敵撃破時に画面内にパーティクルが飛び散る視覚的フィードバック
-- **ミニマルUI**: スコアとライフのみを表示し、ゲームプレイに集中できる設計
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
 ## Acceptance Criteria
 
-| ID | 要件 | 検証方法 |
-|----|------|----------|
-| AC-1 | ブラウザでアクセス可能 | `http://localhost:8080` にアクセスし、ゲーム画面が表示される |
-| AC-2 | ドローン操作可能 | 左右キーでドローンが移動する |
-| AC-3 | 弾発射可能 | スペースキーで弾が発射される |
-| AC-4 | 敵撃破フィードバック | 敵を撃つとパーティクルエフェクトが発生する |
-| AC-5 | スコア表示 | 画面上部に現在のスコアが表示される |
-| AC-6 | ライフ表示 | 画面上部に現在のライフが表示される |
-| AC-7 | ゲームオーバー判定 | ライフが0になるとゲームオーバー画面が表示される |
-| AC-8 | ステージクリア判定 | 全敵を撃破すると次のステージへ進む |
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
 
 ## Non-Goals
 
-- マルチプレイヤー機能
-- 外部サービス連携
-- 複雑なストーリーモード
-- モバイルタッチ操作（Sprint 1では対象外）
-
-## Qualitative Requirements → Observable Criteria
-
-| 定性要求 | 観測可能な基準 |
-|----------|----------------|
-| 新規性 | パーティクルエフェクトと浮遊移動が実装されている |
-| 楽しい | ゲームオーバー後もリトライ可能で、スコアが記録される |
-| ポップ | カラフルなパーティクルエフェクトとミニマルなUI |
-| シンプル | スコアとライフのみを表示、操作は左右移動＋弾発射のみ |
-| production-ready | Dockerコンテナ化可能、Kubernetesデプロイ可能、ヘルスチェックエンドポイントあり |
-
-## Sprint 1 Scope
-
-- Go net/http サーバーの構築
-- `/` エンドポイントでゲーム画面を提供
-- `/healthz` ヘルスチェックエンドポイント
-- Dockerfile と Helm chart の基本構成
-- GitHub Actions CI の基本パイプライン
-- 最小限のゲーム機能（ドローン移動、弾発射、敵出現、パーティクルエフェクト）
+- Multiplayer.
+- External score services.
+- Complex level progression.
