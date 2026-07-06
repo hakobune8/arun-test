@@ -1,4 +1,4 @@
-# Artifact Contract: One-Button Invaders
+# Artifact Contract: Gravity Flip Invaders
 
 This contract is the implementation source of truth for how generated artifacts connect. Product intent lives in `docs/product-brief.md`; this file defines the route, file, module, and validation expectations that backend, frontend, QA, Docker, Helm, and documentation work must preserve.
 

@@ -1,8 +1,8 @@
-# Product Brief: One-Button Invaders
+# Product Brief: Gravity Flip Invaders
 
 ## Concept
 
-One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+Gravity Flip Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
 ## Target User
 
