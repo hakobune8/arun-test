@@ -1,60 +1,24 @@
-# Gravity Invader — Product Brief
+# Product Brief: One-Button Invaders
 
 ## Concept
 
-**Gravity Invader** は、従来のインベーダーゲームに「重力シフト」メカニクスを組み合わせた、シンプルかつ新規性のあるブラウザゲームです。
-
-プレイヤーは画面下部の自機を操作し、上から降ってくる敵を撃破します。通常のインベーダーゲームでは敵は直線的に降りますが、Gravity Invader では**画面下部の「重力スイッチ」を押すことで、敵の移動方向が上下に反転**します。これにより、敵の軌道を読み替え、効率的な撃破ルートを構築する戦略性が生まれます。
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
 ## Target User
 
-- ブラウザで手軽に遊べるカジュアルゲームを好むユーザー
-- シンプルなルールだが、奥深い戦略性を求めるプレイヤー
-- 短時間（1〜3分）で遊べるゲームを好むユーザー
-
-## Core Loop
-
-1. **敵の出現** — 敵が上から降ってくる
-2. **重力シフト** — スペースキーで重力方向を反転（敵が上昇し始める）
-3. **軌道読み** — 敵の移動パターンを読み、自機を移動
-4. **撃破** — 敵に弾を当ててスコアを獲得
-5. **コンボ** — 連続撃破でスコアボーナス
-6. **ゲームオーバー** — 敵が画面下部に到達したら終了
-
-## Differentiating Mechanic
-
-### 重力シフト（Gravity Shift）
-
-- **操作**: スペースキー1回で重力方向を反転
-- **効果**: 降下中の敵が上昇し始め、再び押すと再び降下
-- **戦略的価値**: 敵の軌道を予測し、最適な撃破タイミングを判断
-- **リミット**: 1ラウンドにつき最大5回のシフト（戦略的選択が必要）
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
 ## Acceptance Criteria
 
-| 要件 | 観測可能な criteria |
-|------|---------------------|
-| 新規性 | 重力シフトメカニクスが実装され、敵の軌道が反転する |
-| 楽しい | 連続撃破（コンボ）システムでスコアボーナスが発生する |
-| ポップ | 明るいカラーパレット、簡潔なUI、アニメーション付きの敵表示 |
-| シンプル | 操作は矢印キー（移動）+ スペースキー（重力シフト）+ エンターキー（開始）のみ |
-| Production-ready | /healthz エンドポイントが存在し、200 OK を返す |
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
 
 ## Non-Goals
 
-- 複数プレイヤー対応
-- 外部サービス連携（スコアランキング等）
-- 複雑なストーリーモード
-- モバイルタッチ操作
-
-## Value Proposition
-
-> 「1つのボタンでゲームの法則が変わる。シンプルだが、奥深いインベーダーゲーム。」
-
-## QA Validation
-
-1. ブラウザで `/` にアクセスし、ゲーム画面が表示される
-2. 矢印キーで自機が左右に移動する
-3. スペースキーで重力が反転し、敵の移動方向が変わる
-4. 敵に弾を当てるとスコアが増加する
-5. `/healthz` にアクセスすると 200 OK が返る
+- Multiplayer.
+- External score services.
+- Complex level progression.

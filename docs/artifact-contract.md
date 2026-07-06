@@ -1,111 +1,36 @@
-# Implementation Contract
+# Artifact Contract: One-Button Invaders
 
-この文書は、`docs/product-brief.md` で定義されたプロダクトコンセプトを技術的な実装に接続するための契約です。
+This contract is the implementation source of truth for how generated artifacts connect. Product intent lives in `docs/product-brief.md`; this file defines the route, file, module, and validation expectations that backend, frontend, QA, Docker, Helm, and documentation work must preserve.
 
-## 1. Source of Truth
+## Primary route
 
-- **Product Brief**: `docs/product-brief.md`
-- **Concept**: リズムに合わせた射撃が核心となる「リズムインベーダー」。
-- **Differentiating Mechanic**: ビジュアルまたはオーディオのビートに合わせて敵を撃つと「パーフェクト」判定となり、スコアボーナスや視覚的フィードバックが発生する。
+- `/` serves the primary browser experience.
+- `/healthz` returns a JSON health response.
 
-## 2. Repository Layout
+## Frontend
 
-関心を分離し、拡張性を確保するため以下のディレクトリ構成を採用します。
+- Directory: `client/`.
+- Package file: `client/package.json`.
+- Entrypoint: `client/index.html`.
+- Required local assets: `client/styles.css` and `client/src/main.js`.
+- HTML must not reference local CSS or JavaScript files that are absent from the repository.
 
-```
-.
-├── server/          # Go HTTP サーバーとバックエンドロジック
-│   ├── main.go      # エントリポイント
-│   ├── go.mod
-│   └── ...
-├── client/          # ブラウザ用フロントエンドアセット
-│   ├── index.html   # ゲームUIのエントリポイント
-│   ├── style.css    # スタイル定義
-│   └── app.js       # ゲームロジック（Canvas API使用）
-├── charts/          # Helmチャート（Kubernetesデプロイメント用）
-│   └── ...
-├── docs/            # プロダクトおよび検証ドキュメント
-│   ├── product-brief.md
-│   └── artifact-contract.md
-├── Dockerfile       # コンテナビルド定義
-├── Makefile         # ローカル検証コマンドのエイリアス
-└── README.md        # プロジェクト概要
-```
+## Backend
 
-## 3. Backend Contract
+- Language: Go.
+- Module path: `github.com/hakobune8/arun-test/server`.
+- Module file: `server/go.mod`.
+- Entrypoint: `server/main.go`.
+- The Go server must serve `/` from `client/index.html` and must serve every local CSS or JavaScript file referenced by that HTML.
 
-### Module & Entrypoint
-- **Module Path**: `github.com/hakobune8/arun-test/server`
-- **Entrypoint**: `server/main.go`
+## Deployment
 
-### Routes & Behavior
-1. **`GET /`**
-   - `client/index.html` を serve する。
-   - ゲームUIが直接表示されるプライマリルート。
-2. **`GET /health`**
-   - `200 OK` を返す。Kubernetesのliveness/readiness probe用。
-3. **`GET /static/*`**
-   - `client/` 内の CSS/JS ファイルを serve する。
+- Docker and Kubernetes artifacts must package the same backend and frontend paths defined above.
+- Helm chart templates must expose the application service and health checks without introducing a separate product path.
 
-### Architecture Note
-- 現在のSprint 1では、HTTPハンドラとドメインロジックを `server/` 内で管理するが、将来の拡張（WebSocket通信、スコアDB連携など）を見据え、`server/handler/` と `server/game/` への分離を可能にする構造を維持する。
+## Validation
 
-## 4. Frontend Contract
-
-### Entrypoint & Assets
-- **HTML**: `client/index.html`
-- **CSS**: `client/style.css`
-- **JS**: `client/app.js`
-
-### Implementation Requirements
-1. **Canvas Rendering**: `app.js` は HTML5 Canvas APIを使用してゲームループを実装する。
-2. **Mechanic Implementation**: 
-   - 「リズムインベーダー」の差別化 mechanic（ビート同期射撃）を `app.js` で実装する。
-   - 例：画面上にビートインジケーターを表示し、敵が特定の位置に来たタイミングで射撃すると視覚的エフェクトが発生するロジック。
-3. **Responsiveness**: 基本的なレスポンシブ対応（または固定アスペクト比のコンテナ）を実装し、ブラウザで正常に表示できることを確認する。
-
-## 5. Deployment Contract
-
-### Docker
-- **Dockerfile**: リポジトリルートまたは `server/` に配置。
-- **Multi-stage Build**: Goバイナリビルドと静的ファイルの結合を含むマルチステージビルドを採用する。
-- **Image**: `arun-test:latest`
-
-### Kubernetes / Helm
-- **Charts**: `charts/` ディレクトリにHelmチャートを配置。
-- **Components**:
-  - `Deployment`: リソース制限（requests/limits）とプローブ（liveness/readiness）を含む。
-  - `Service`: ClusterIPまたはNodePort（環境による）。
-  - **Ingress**: 不要（Sprint 1時点）。
-
-## 6. Validation Commands
-
-以下のコマンドで検証可能であることを確認する。
-
-1. **Build & Test**
-   ```bash
-   go build ./server/...
-   go test ./server/...
-   ```
-2. **Local Run**
-   ```bash
-   go run ./server/main.go
-   # http://localhost:8080 にアクセスしてゲームUIが表示されることを確認
-   ```
-3. **Docker Build**
-   ```bash
-   docker build -t arun-test .
-   docker run -p 8080:8080 arun-test
-   ```
-4. **Helm Template**
-   ```bash
-   helm template arun-test ./charts/
-   ```
-
-## 7. Acceptance Criteria (Technical)
-
-- [ ] `server/main.go` が起動し、`/` で `client/index.html` が返される。
-- [ ] `client/app.js` がゲームループを実行し、Canvasに描画する。
-- [ ] 「リズムインベーダー」の核心 mechanic がコード内に実装されている。
-- [ ] Dockerfile が正常にビルドできる。
-- [ ] Helm chart が `helm template` で正常にレンダリングされる。
+- `cd server && go test ./...` passes when Go tooling is available.
+- `cd server && go vet ./...` passes when Go tooling is available.
+- Frontend smoke validation confirms `/` returns HTML and that referenced local CSS/JS assets exist and are served.
+- QA must treat any mismatch between this contract and repository artifacts as release-blocking.
