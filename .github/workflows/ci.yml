@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Verify server builds
+        run: |
+          cd server
+          go vet ./...
+          go build -v ./...
+
+      - name: Check frontend assets
+        run: |
+          test -f client/index.html || exit 1
+          echo "Frontend entrypoint exists"

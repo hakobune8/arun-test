@@ -1,61 +1,24 @@
-# Sine-Wave Invader — Product Brief
+# Product Brief: One-Button Invaders
 
 ## Concept
 
-**サインウェーブインベーダー** — 弾がサイン波（正弦波）を描いて飛来する、レトロインベーダーゲーム。
-
-従来のインベーダーゲームでは弾は直進するが、本作では弾が左右に揺れながら降下する。プレイヤーは弾の軌道を読み、揺れのタイミングに合わせて移動・回避する。
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
 ## Target User
 
-- レトロゲームを愛するカジュアルゲーマー
-- シンプルなルールで、奥深い操作感を求めるプレイヤー
-- 5〜10分のプレイセッションを好むユーザー
-
-## Core Loop
-
-1. **観測** — サイン波を描く弾の軌道を読み取る
-2. **予測** — 弾の次の位置を予測する
-3. **回避** — 予測に合わせて自機を移動する
-4. **反撃** — 隙を見て弾を発射し、敵を破壊する
-5. **ループ** — 弾の速度・振幅が増加し、難易度が上昇する
-
-## Differentiating Behavior
-
-- **弾のサイン波軌道**: 弾が `sin(t)` の波形を描いて降下する。振幅と周波数はレベルに応じて変化する
-- **軌道読み**: プレイヤーは弾の「山」と「谷」のタイミングで移動する必要がある
-- **予測プレイ**: 直進弾とは異なる、時間軸での判断が要求される
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
 ## Acceptance Criteria
 
-| # | 要件 | 検証方法 |
-|---|------|----------|
-| AC-1 | ゲームタイトル画面に「Sine-Wave Invader」のタイトルが表示される | ブラウザで `/` にアクセスし、タイトルを確認 |
-| AC-2 | 弾がサイン波を描いて飛来する | ゲームプレイ中に弾の軌道が曲線であることを確認 |
-| AC-3 | プレイヤーは左右キーで自機を移動できる | 左右キー操作で自機が移動することを確認 |
-| AC-4 | スペースキーで弾を発射できる | スペースキーで弾が発射され、敵を破壊できる |
-| AC-5 | 敵を全滅させると次のレベルに進む | 敵を全滅後、次のレベルの敵が出現することを確認 |
-| AC-6 | ゲームオーバー画面にスコアが表示される | 自機が破壊された後、スコアが表示される |
-| AC-7 | `/healthz` エンドポイントが `200 OK` を返す | `curl http://localhost:8080/healthz` で確認 |
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
 
-## Non-Goals (Sprint 1)
+## Non-Goals
 
-- ネットワークマルチプレイ
-- 外部サービス連携（スコア保存など）
-- 複雑なサウンドエフェクト
-- モバイルタッチ操作
-- 高解像度アセット
-
-## Qualitative Requirements → Observable Criteria
-
-| 定性要求 | 観測可能な基準 |
-|----------|----------------|
-| **新規性** | 弾がサイン波軌道を描く — 既存インベーダーゲームにはない mechanic |
-| **楽しい** | 弾の軌道読みと回避のフィードバックループが成立している |
-| **ポップ** | 明るい配色（背景: 濃紺、弾: 白/水色、敵: 赤/黄、自機: 緑） |
-| **シンプル** | 操作は左右キー + スペースキーのみ。ルール説明不要で直感的 |
-| **Production-ready** | `/healthz` 動作、Docker ビルド成功、K8s manifest 有効 |
-
-## Source of Truth
-
-このドキュメントが Sprint 1〜3 の唯一の product concept source of truth です。README、UI ラベル、コード、テスト、Helm chart はすべてこの brief に従って実装されます。
+- Multiplayer.
+- External score services.
+- Complex level progression.
