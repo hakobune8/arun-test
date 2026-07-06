@@ -1,42 +1,24 @@
-# Product Brief: Gravity Well (重力井戸)
+# Product Brief: One-Button Invaders
 
-## 1. Concept
-**Gravity Well**は、クラシックなインベーダーゲームに「重力」という物理演算要素を加えた、新規性のあるアーケードゲームです。
-プレイヤーは単に敵を撃つだけでなく、画面に「重力井戸（Gravity Well）」を設置し、弾の軌道を変えたり敵を引き寄せたりして、戦略的に敵を倒すことが求められます。
+## Concept
 
-## 2. Target User
-- レトロゲームを愛するカジュアルゲーマー
-- シンプルなルールだが奥深いゲームプレイを好むプレイヤー
-- 短時間で遊べるモバイル/ブラウザゲームを好むユーザー
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
-## 3. Core Loop
-1. **移動**: プレイヤーシップを左右に移動し、敵の攻撃を回避する。
-2. **射撃**: 敵に向かって弾を発射する。
-3. **重力操作**: 画面内に「重力井戸」を配置する。これにより、発射された弾が曲がり、敵が引き寄せられる。
-4. **破壊**: 曲がった弾や引き寄せられた敵を破壊し、スコアを獲得する。
-5. **サバイバル**: 敵の攻撃を避けながら、より高いスコアを目指す。
+## Target User
 
-## 4. Differentiating Mechanic: Gravity Well
-- **弾の曲射**: 重力井戸の近くに弾が通ると、弾の軌道が井戸の中心に向かって曲がる。
-- **敵の引き寄せ**: 重力井戸は近くの敵をゆっくりと中心へ引き寄せる。これにより、通常では届かない位置の敵を攻撃可能にする。
-- **戦略的設置**: 重力井戸は有限の数しか設置できないため、どこに設置するかという戦略性が求められる。
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
-## 5. Acceptance Criteria
-- [ ] プレイヤーはキーボードまたはタッチ操作でシップを移動できる。
-- [ ] プレイヤーは弾を発射できる。
-- [ ] 重力井戸を設置でき、弾の軌道が曲がることを視覚的に確認できる。
-- [ ] 重力井戸が敵を引き寄せる効果を持つ。
-- [ ] 敵を破壊するとスコアが加算される。
-- [ ] 敵が画面下端に到達するか、プレイヤーに衝突するとゲームオーバーになる。
-- [ ] ゲームオーバー後、スコア表示とリトライボタンが表示される。
+## Acceptance Criteria
 
-## 6. Non-Goals
-- マルチプレイヤー機能
-- 複雑なストーリーやキャラクター設定
-- 高解像度の3Dグラフィックス
-- 外部サービスとの連携（スコアランキングなど）
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
 
-## 7. Value Proposition
-- **新規性**: 重力という物理演算をゲームプレイに組み込むことで、従来のインベーダーゲームとは異なる戦略的深度を提供する。
-- **シンプルさ**: ルールはシンプルだが、重力の使いこなしによって奥深いゲームプレイを実現する。
-- **楽しさ**: 弾が曲がる爽快感や、敵を引き寄せて一網打尽にする達成感を提供する。
+## Non-Goals
+
+- Multiplayer.
+- External score services.
+- Complex level progression.
