@@ -1,43 +1,24 @@
-# Product Brief: Orbit Invaders
+# Product Brief: One-Button Invaders
 
 ## Concept
-**Orbit Invaders** — 敵がプレイヤーの周りを軌道運行する、従来のインベーダーゲームとは異なる新規性のシューティングゲーム。
 
-プレイヤーは画面中央に固定され、周囲を回る敵に対して弾を発射して軌道を崩し、撃破する。
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
 ## Target User
-- クラシックなインベーダーゲームをプレイしたことがあるが、新しいメカニクスを求めるカジュアルゲーマー
-- 短時間で遊べるアーケードスタイルを好むユーザー
 
-## Core Loop
-1. 敵がプレイヤーの周りを円形軌道で運行開始
-2. プレイヤーはマウス/タッチで照準を合わせ、クリックで弾を発射
-3. 弾が敵に命中すると敵が軌道から外れ、落下して撃破
-4. 全敵撃破で次のラウンド（軌道数・敵数増加）
-5. プレイヤーが敵に衝突するとゲームオーバー
-
-## Differentiating Behavior
-- **軌道メカニクス**: 敵がプレイヤーの周りを回転し続ける。弾を当てるタイミングと角度が重要
-- **軌道崩壊**: 敵に命中すると軌道から外れ、重力で落下。物理的なフィードバックが明確
-- **マルチ軌道**: 複数の軌道層で敵が運行。内側軌道ほど高速
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
 ## Acceptance Criteria
 
-| 定性要求 | 観測可能な基準 |
-|---------|--------------|
-| 新規性 | 敵がプレイヤー周りを軌道運行し、命中で軌道崩壊するメカニクスが実装されている |
-| 楽しい | 弾発射→命中→軌道崩壊→撃破のフィードバックループが明確（視覚的・時間的） |
-| ポップ | 敵・弾・軌道が鮮やかな色で描画され、衝突エフェクトがある |
-| シンプル | 操作はマウスクリックのみ。UIはスコア・ライフ・ラウンド表示のみ |
-| Production-ready | 90%以上のテストカバレッジ、Dockerビルド成功、K8sデプロイ可能 |
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `go run ./server`.
 
 ## Non-Goals
-- マルチプレイヤー
-- 外部サービス連携（スコア保存など）
-- モバイルネイティブアプリ
-- 複雑なストーリーモード
 
-## Technical Constraints
-- 外部サービスなしで動作
-- ブラウザ単体でプレイ可能
-- Go HTTPサーバーで静的アセット配信
+- Multiplayer.
+- External score services.
+- Complex level progression.
