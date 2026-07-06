@@ -1,40 +1,31 @@
-# Novel Invader Game
+# One-Button Invaders
 
-新規性のあるインベーダーゲームです。ポップでシンプルなUIと、従来のインベーダーゲームとは異なる「弾の軌道予測」メカニクスを搭載しています。
+This repository started empty. ARUN generated a minimal static browser game with a gravity-lane mechanic so an implementation-heavy scrum workflow can produce reviewable code, documentation, and validation artifacts without GitHub API calls.
 
-## 概要
-- **対象ユーザー**: アーケードゲームファン、カジュアルゲーマー
-- **コアループ**: 敵の出現 → 弾の軌道予測 → 回避/撃破 → スコア加算
-- **差別化要素**: 弾の軌道を可視化し、プレイヤーが戦略的に回避・撃破できるUI
-- **非目標**: 複雑なストーリーモード、マルチプレイヤー、外部サービス連携
+## Repository layout
 
-## Helm によるデプロイ
+- `server/` contains the Go HTTP entrypoint.
+- `client/` contains the browser UI served from `/`.
+- `charts/` and `k8s/` contain deployment artifacts when present.
+- `docs/` contains product and validation notes.
 
-このアプリケーションは、ARUN と同じ Kubernetes 環境にデプロイできるように設計されています。Helm チャートを使用して簡単に展開できます。
+## Features
 
-### 前提条件
-- `helm` v3 以上
-- `kubectl` がクラスタに接続されていること
+- Keyboard controls with ArrowLeft, ArrowRight, and Space.
+- Space flips the defender between floor and ceiling gravity lanes.
+- Score display that increments only when the defender is horizontally aligned and on the same gravity lane as the invader.
+- Lives tracking that decrements when an invader reaches the bottom of the arena.
+- Restart behavior that resets score, lives, player position, and invader position.
 
-### インストール
-```bash
-helm install novel-invader ./charts/novel-invader \
-  --set image.repository=<your-registry>/novel-invader \
-  --set image.tag=<version>
+## Run
+
+Run the Go server with `cd server && go run .` and open `http://127.0.0.1:8080/`, or open `client/index.html` directly for a static browser review.
+
+## Validate
+
+```sh
+npm test
+npm run build
 ```
 
-### 値のカスタマイズ
-`charts/novel-invader/values.yaml` を編集するか、`--set` フラグで以下を設定できます：
-- `image.repository`, `image.tag`: コンテナイメージ
-- `service.type`: Service タイプ (`ClusterIP`, `NodePort`, `LoadBalancer`)
-- `resources.limits`, `resources.requests`: リソース制限
-- `livenessProbe`, `readinessProbe`: ヘルスチェック設定
-
-### 検証
-```bash
-kubectl get pods -l app.kubernetes.io/name=novel-invader
-kubectl get svc -l app.kubernetes.io/name=novel-invader
-kubectl logs -l app.kubernetes.io/name=novel-invader --tail=20
-```
-
-詳細なデプロイ手順や運用ガイドは [docs/deployment.md](docs/deployment.md) を参照してください。
+Both scripts use `node --check` and do not require package installation.
