@@ -1,49 +1,24 @@
-# Product Brief: Rhythm Invaders (リズムインベーダー)
+# Product Brief: One-Button Invaders
 
 ## Concept
-音楽のビートに合わせて敵が出現し、ビートに合わせて撃つことで高得点が得られるリズムアクションシューティングゲーム。
+
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
 ## Target User
-- 短時間で遊べるカジュアルゲーマー
-- リズムゲームとシューティングゲームの両方に興味があるユーザー
-- モバイル/ブラウザで手軽にプレイしたいユーザー
 
-## Core Loop
-1. BGMが再生される
-2. ビートに合わせて敵が出現（出現パターンはビートに同期）
-3. ユーザーはビートに合わせて弾を発射
-4. 正確なタイミングで撃つほど高得点（パーフェクト/グッド/ミス判定）
-5. ラウンドクリアで次の難易度へ
-
-## Differentiating Behavior
-- **ビート同期出現**: 敵の出現位置・タイミングがBGMのビートに完全に同期
-- **リズム判定スコアリング**: 単なる命中判定ではなく、ビートからのズレでスコアが変動
-- **簡易BGM生成**: 外部ファイルなしでWeb Audio APIでビートパターンを生成
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
 ## Acceptance Criteria
-| 定性要求 | 観測可能な基準 |
-|---------|--------------|
-| 新規性 | 敵の出現がBGMビートに同期している（±50ms以内） |
-| 楽しい | リズム判定（パーフェクト/グッド/ミス）が視覚・聴覚フィードバック付きで表示される |
-| ポップ | 明るいカラーパレット、シンプルなUI、アニメーション付き |
-| シンプル | 操作は矢印キー（移動）+ スペースキー（発射）のみ |
-| Production-ready | /healthzエンドポイントが存在し、200 OKを返す |
+
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
 
 ## Non-Goals
-- 複数プレイヤー対応
-- 外部BGMファイルの読み込み（Sprint 1ではWeb Audio API生成のみ）
-- 高解像度アセット（Sprint 1ではCanvas描画）
-- モバイルタッチ操作（Sprint 1ではキーボード操作のみ）
 
-## Primary User Path
-1. ブラウザで `/` にアクセス
-2. ゲームタイトル画面が表示される
-3. 「START」ボタンをクリック
-4. ゲームプレイ画面でキーボード操作
-5. ゲームオーバー画面でスコア表示
-
-## Technical Constraints
-- 外部サービス不要（オフライン動作可能）
-- Go net/http + HTML/CSS/JS（Canvas）
-- Docker + Kubernetes対応
-- GitHub Actions CI
+- Multiplayer.
+- External score services.
+- Complex level progression.

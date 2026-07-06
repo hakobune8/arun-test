@@ -1,0 +1,6 @@
+apiVersion: v2
+name: arun-test
+description: 新規性のあるインベーダーゲーム
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
