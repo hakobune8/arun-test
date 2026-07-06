@@ -1,59 +1,24 @@
-# 重力操作インベーダーゲーム — 製品設計ブリーフ
+# Product Brief: One-Button Invaders
 
-## 製品名
-**GravInvader**（重力インベーダー）
+## Concept
 
-## 対象ユーザー
-- シンプルなアーケードゲームを好むカジュアルゲーマー
-- 従来のインベーダーゲームに飽きた経験者
-- 物理ベースのインタラクションを楽しむユーザー
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
-## コアコンセプト
-プレイヤーは自機から「重力ポータル」を配置し、敵弾や敵機を重力で引き寄せ、衝突による連鎖破壊でスコアを稼ぐ。従来の「弾を撃つ」だけでなく「重力で操作する」ことが差別化要素。
+## Target User
 
-## コアループ
-1. 敵機が下方向に移動しながら弾を発射
-2. プレイヤーはマウス/タッチで重力ポータルを配置
-3. 重力ポータルが敵弾・敵機を引力で引き寄せ
-4. 敵弾同士が衝突すると爆発（連鎖反応）
-5. 敵機に弾が直撃すると敵機も破壊
-6. 連鎖が完了したら次のウェーブへ
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
-## 差別化メカニクス
-- **重力ポータル**: プレイヤーが画面に配置できる引力源。敵弾を曲げて敵機にぶつける
-- **連鎖スコア**: 1発の弾が複数の敵を倒すたびにボーナス（2連=2x, 3連=3x...）
-- **ポータル制限**: 同時に配置できるポータル数に制限（戦略的選択を要求）
+## Acceptance Criteria
 
-## 受け入れ基準（Acceptance Criteria）
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
 
-| No. | 基準 | 検証方法 |
-|-----|------|----------|
-| AC-1 | `/` でゲーム画面がレンダリングされる | ブラウザでアクセスし、Canvas が描画される |
-| AC-2 | 重力ポータルがマウスクリックで配置できる | クリック操作でポータルが出現する |
-| AC-3 | 敵弾が重力ポータルの引力で軌道が曲がる | 弾の軌道がポータル方向に湾曲する |
-| AC-4 | 敵弾同士の衝突で連鎖爆発が発生する | 2発以上の弾が衝突すると爆発エフェクト |
-| AC-5 | 連鎖スコアが正しく加算される | UI にスコア表示が更新される |
-| AC-6 | `/healthz` で 200 OK が返る | curl で確認 |
+## Non-Goals
 
-## 非目標（Non-Goals）
-- マルチプレイヤー機能
-- 外部サービス連携（認証、スコアランキング等）
-- 複雑なストーリーモード
-- モバイルネイティブアプリ（ブラウザ対応のみ）
-- 本番環境でのスケーリング（Sprint 1 ではローカル動作のみ）
-
-## 定性的意図 → 観測可能基準
-
-| 意図 | 観測可能基準 |
-|------|-------------|
-| 新規性 | 弾を「撃つ」だけでなく「重力で操作」するインタラクションが実装されている |
-| 楽しい | 連鎖爆発のフィードバック（エフェクト + スコア表示）が明確 |
-| ポップ | 高彩度のエフェクト、簡潔なUI、明確な視覚的フィードバック |
-| シンプル | 操作はマウスクリックのみ、ルールは3ステップ以内で説明可能 |
-| production-ready | `/healthz` 動作、Docker 化、K8s マニフェスト、CI パス |
-
-## 技術スタック
-- **Backend**: Go 1.21+ (`net/http`)
-- **Frontend**: Vanilla JS + HTML5 Canvas（外部依存なし）
-- **配信**: Go の `http.FileServer` で静的アセットを配信
-- **デプロイ**: Docker + Kubernetes (Helm)
+- Multiplayer.
+- External score services.
+- Complex level progression.
