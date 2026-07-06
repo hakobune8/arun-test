@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hakobune Invaders</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="ui-overlay">
+      <div id="score">Score: 0</div>
+      <div id="lives">Lives: 3</div>
+      <div id="level">Wave: 1</div>
+    </div>
+    <div id="start-screen">
+      <h1>Hakobune Invaders</h1>
+      <p>舟で海を駆け巡れ！波に乗り、敵を撃ち破れ！</p>
+      <button id="start-btn">Start Game</button>
+      <div id="controls-info">
+        <p>← → : 移動 | Space : 発射 | Shift : 加速（加速中は操縦が鈍くなる）</p>
+      </div>
+    </div>
+    <div id="game-over-screen" style="display:none;">
+      <h1>Game Over</h1>
+      <p id="final-score">Score: 0</p>
+      <button id="restart-btn">Play Again</button>
+    </div>
+  </div>
+  <script src="/static/game.js"></script>
+</body>
+</html>
