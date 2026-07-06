@@ -1,63 +1,31 @@
-# Chrono Invaders
+# One-Button Invaders
 
-**Chrono Invaders** は、レトロなインベーダーゲームに「タイムリワインド」機能を搭載した、新規性のあるアーケードゲームです。
+This repository started empty. ARUN generated a minimal static browser game with a gravity-lane mechanic so an implementation-heavy scrum workflow can produce reviewable code, documentation, and validation artifacts without GitHub API calls.
 
-## 概要
+## Repository layout
 
-このプロジェクトは、以下の価値を提供します：
-- **新規性**: 敵を倒すだけでなく、過去に戻って戦略をやり直す「タイムリワインド」 mechanic。
-- **シンプル**: 直感的な操作と、レトロなビジュアル。
-- **Production-Ready**: Go による堅牢なバックエンド、Docker/Kubernetes 対応のデプロイメント。
+- `server/` contains the Go HTTP entrypoint.
+- `client/` contains the browser UI served from `/`.
+- `charts/` and `k8s/` contain deployment artifacts when present.
+- `docs/` contains product and validation notes.
 
-## 主な機能 (Sprint 1-3)
+## Features
 
-- [x] タイムリワインド mechanic の実装
-- [x] Go HTTP サーバーと静的アセット配信
-- [x] Docker コンテナ化
-- [x] Kubernetes (Helm) 対応デプロイメント
-- [x] 基本的な Smoke Tests
+- Keyboard controls with ArrowLeft, ArrowRight, and Space.
+- Space flips the defender between floor and ceiling gravity lanes.
+- Score display that increments only when the defender is horizontally aligned and on the same gravity lane as the invader.
+- Lives tracking that decrements when an invader reaches the bottom of the arena.
+- Restart behavior that resets score, lives, player position, and invader position.
 
-## 開発者向けガイド
+## Run
 
-### ローカル実行
+Run the Go server with `cd server && go run .` and open `http://127.0.0.1:8080/`, or open `client/index.html` directly for a static browser review.
 
-Go 環境が必要です。
+## Validate
 
-```bash
-# ビルドと実行
-go build -o main ./server/cmd/main.go
-./main
-
-# または直接実行
-go run ./server/cmd/main.go
+```sh
+npm --prefix client test
+npm --prefix client run build
 ```
 
-ブラウザで `http://localhost:8080` にアクセスしてください。
-
-### Docker
-
-```bash
-docker build -t chrono-invaders .
-docker run -p 8080:8080 chrono-invaders
-```
-
-## ドキュメント
-
-- [Artifact Contract](docs/artifact-contract.md): 成果物の接続仕様
-- [Deployment Guide](docs/deployment.md): Kubernetes へのデプロイ手順
-- [QA Report](docs/qa-report.md): 検証結果と known limitations
-
-## 構造
-
-```
-.
-├── server/       # Go backend & HTTP server
-├── client/       # Frontend assets (HTML/CSS/JS)
-├── charts/       # Helm charts
-├── docs/         # Product & operational docs
-└── README.md     # This file
-```
-
-## ライセンス
-
-MIT License
+Both scripts use `node --check` from `client/package.json` and do not require package installation.
