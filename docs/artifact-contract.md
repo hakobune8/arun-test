@@ -1,63 +1,36 @@
-# Artifact Contract
+# Artifact Contract: One-Button Invaders
 
-この文書は、プロダクトの設計意図（Product Brief）と実装成果物（Implementation Artifacts）を接続する唯一の信頼情報源（Source of Truth）です。
+This contract is the implementation source of truth for how generated artifacts connect. Product intent lives in `docs/product-brief.md`; this file defines the route, file, module, and validation expectations that backend, frontend, QA, Docker, Helm, and documentation work must preserve.
 
-## 1. Product Concept: GravInvader
+## Primary route
 
-*   **Core Loop**: インベーダーを倒しつつ、プレイヤーが「重力」を操作して壁や天井を移動する。
-*   **Differentiation**: 従来の上下左右移動に加え、`Space`キーで重力方向を反転させることで、敵の弾を回避したり、天井から落下して攻撃したりする。
-*   **Target User**: シンプルな操作で爽快感を求めるアーケードゲームファン。
+- `/` serves the primary browser experience.
+- `/healthz` returns a JSON health response.
 
-## 2. Primary Route & Serving
+## Frontend
 
-*   **Entry Point**: `GET /`
-    *   **Response**: `client/index.html` を Content-Type `text/html` で返す。
-*   **Static Assets**: `GET /assets/*`
-    *   **Response**: `client/assets/` 配下のファイル（CSS, JS, Images）を返す。
-*   **Health Check**: `GET /health`
-    *   **Response**: `200 OK` with JSON `{"status": "ok"}`.
+- Directory: `client/`.
+- Package file: `client/package.json`.
+- Entrypoint: `client/index.html`.
+- Required local assets: `client/styles.css` and `client/src/main.js`.
+- HTML must not reference local CSS or JavaScript files that are absent from the repository.
 
-## 3. Frontend Contract
+## Backend
 
-*   **Entrypoint**: `client/index.html`
-*   **Assets Directory**: `client/assets/`
-    *   `style.css`: ゲーム画面のスタイリング。
-    *   `game.js`: Canvasベースのゲームロジック（Canvas API使用）。
-*   **UI Requirements**:
-    *   ゲームタイトル「GravInvader」の表示。
-    *   スコア表示。
-    *   「重力反転」操作のヒント表示。
+- Language: Go.
+- Module path: `github.com/hakobune8/arun-test/server`.
+- Module file: `server/go.mod`.
+- Entrypoint: `server/main.go`.
+- The Go server must serve `/` from `client/index.html` and must serve every local CSS or JavaScript file referenced by that HTML.
 
-## 4. Backend Contract
+## Deployment
 
-*   **Module Path**: `github.com/hakobune8/arun-test`
-*   **Entrypoint**: `server/main.go`
-*   **Dependencies**:
-    *   `net/http` (Standard library)
-    *   `embed` (Static assets embedding)
-*   **Configuration**:
-    *   Port: `8080` (Env var `PORT` で上書き可能)
+- Docker and Kubernetes artifacts must package the same backend and frontend paths defined above.
+- Helm chart templates must expose the application service and health checks without introducing a separate product path.
 
-## 5. Deployment Contract
+## Validation
 
-*   **Dockerfile**: `Dockerfile` (Multi-stage build)
-*   **Helm Chart**: `charts/arun-test/`
-    *   **Service**: ClusterIP (Port 80 -> 8080)
-    *   **Deployment**: Replicas 1, Resource limits defined.
-*   **Kubernetes Manifests**: `k8s/` (Optional direct manifests)
-
-## 6. Validation Commands
-
-*   **Local Build**: `go build ./...`
-*   **Local Run**: `go run ./server/main.go`
-*   **Smoke Test**: `curl -f http://localhost:8080/health`
-*   **Docker Build**: `docker build -t gravinvader:latest .`
-*   **Helm Lint**: `helm lint charts/arun-test/`
-
-## 7. QA & Acceptance Criteria
-
-*   [ ] `GET /` でゲーム画面（Canvas）が表示される。
-*   [ ] `GET /health` で正常なステータスコードが返る。
-*   [ ] ゲーム内で重力反転（Spaceキー）が動作する。
-*   [ ] Docker イメージが正常にビルドされる。
-*   [ ] Helm Chart が lint を通る。
+- `cd server && go test ./...` passes when Go tooling is available.
+- `cd server && go vet ./...` passes when Go tooling is available.
+- Frontend smoke validation confirms `/` returns HTML and that referenced local CSS/JS assets exist and are served.
+- QA must treat any mismatch between this contract and repository artifacts as release-blocking.
