@@ -1,43 +1,24 @@
-# Product Brief: GravInvader (グラヴィンダー)
+# Product Brief: One-Button Invaders
 
-## 1. Concept
-**GravInvader**は、古典的なインベーダーゲームのメカニクスに「重力反転」を融合させた、新規性のあるアーケードゲームです。プレイヤーは自機を操作して敵を撃破しつつ、画面の上下で重力を反転させて障害物や敵弾を回避します。シンプルながら戦略的な深みを持つ、ポップで楽しい体験を提供します。
+## Concept
 
-## 2. Target User
-- レトロゲームやアーケードゲームを好むカジュアルゲーマー
-- シンプルな操作で没入できるゲームを求めているユーザー
-- 短時間プレイで達成感を得たいユーザー
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
-## 3. Core Loop
-1. **移動**: 自機を左右に移動
-2. **射撃**: 敵に向かって弾を発射
-3. **重力反転**: スペースキーで画面の上下が反転（自機と敵弾の移動方向が反転）
-4. **回避/攻撃**: 重力反転を利用して敵弾を回避しつつ、敵の弱点を突く
-5. **スコア加算**: 敵を撃破するとスコア加算、ライフを失うとゲームオーバー
+## Target User
 
-## 4. Differentiating Behavior
-- **重力反転メカニクス**: 単なる上下移動ではなく、画面全体の重力方向が反転することで、自機と敵弾の物理挙動が変化。これにより、従来のインベーダーゲームとは異なる戦略的深みが生まれる。
-- **動的な衝突判定**: 重力反転時に敵弾の軌道が変化し、プレイヤーは反転タイミングを計ることで回避または逆襲できる。
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
-## 5. Acceptance Criteria
-- [ ] 自機が左右に移動可能
-- [ ] 自機が弾を発射可能
-- [ ] スペースキーで重力反転が実行可能
-- [ ] 重力反転時に自機と敵弾の移動方向が反転する
-- [ ] 敵を撃破するとスコアが加算される
-- [ ] ライフが0になるとゲームオーバー画面が表示される
-- [ ] ゲームオーバー後、リスタート可能
-- [ ] 外部サービスに依存せず、ローカルで動作可能
+## Acceptance Criteria
 
-## 6. Non-Goals
-- マルチプレイヤー機能
-- 複雑なストーリーや進行システム
-- 外部サービス（データベース、認証など）との連携
-- 高解像度や3Dグラフィックス
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
 
-## 7. Qualitative Requirements → Observable Criteria
-- **新規性**: 重力反転メカニクスが実装され、従来のインベーダーゲームとは異なる体験を提供している。
-- **楽しい**: 重力反転のタイミングが戦略的に重要であり、プレイヤーに達成感を与える。
-- **ポップ**: UIが明るく、視覚的に魅力的であり、レトロゲームの雰囲気を保ちつつモダンな印象を与える。
-- **シンプル**: 操作が直感的であり、ルールが明確で、すぐにプレイ可能。
-- **Production-ready**: ローカルでビルド・実行可能であり、Docker/Kubernetesでのデプロイが可能。
+## Non-Goals
+
+- Multiplayer.
+- External score services.
+- Complex level progression.

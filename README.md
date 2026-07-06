@@ -1,56 +1,31 @@
-# 星屑の防衛線 (Stardust Defense) - 新規インベーダーゲーム
+# One-Button Invaders
 
-## プロダクト概要
-従来のインベーダーゲームとは異なる、**「軌道計算と重力スイング」**を核としたアクションゲームです。プレイヤーは宇宙ステーションを防御し、敵の軌道を読みながら自機の位置を最適化して迎撃します。
+This repository started empty. ARUN generated a minimal static browser game with a gravity-lane mechanic so an implementation-heavy scrum workflow can produce reviewable code, documentation, and validation artifacts without GitHub API calls.
 
-## ユーザー体験とコアループ
-1. **観測**: 敵の出現パターンと軌道を読み取る。
-2. **配置**: 自機を重力の影響を受ける軌道上に配置する。
-3. **迎撃**: 敵が近づく瞬間に弾を発射し、軌道共鳴で破壊する。
-4. **評価**: 被弾数と消費エネルギーでスコアを算出。
+## Repository layout
 
-## 差別化される挙動
-- **物理演算ベースの弾道**: 単純な直進弾ではなく、重力ポットの影響で曲がる弾道を採用。
-- **エネルギー管理**: 無限弾数ではなく、エネルギー回復を待機中に管理する必要がある。
+- `server/` contains the Go HTTP entrypoint.
+- `client/` contains the browser UI served from `/`.
+- `charts/` and `k8s/` contain deployment artifacts when present.
+- `docs/` contains product and validation notes.
 
-## 受け入れ基準 (Acceptance Criteria)
-- [x] ブラウザでゲーム画面がレンダリングされる。
-- [x] 自機がマウス/タッチ操作で移動可能。
-- [x] 敵が出現し、弾が衝突判定を持つ。
-- [x] ゲームオーバー条件（ステーションHP 0）で終了画面へ遷移。
-- [x] Docker コンテナ内で起動可能。
+## Features
 
-## 実行方法
+- Keyboard controls with ArrowLeft, ArrowRight, and Space.
+- Space flips the defender between floor and ceiling gravity lanes.
+- Score display that increments only when the defender is horizontally aligned and on the same gravity lane as the invader.
+- Lives tracking that decrements when an invader reaches the bottom of the arena.
+- Restart behavior that resets score, lives, player position, and invader position.
 
-### ローカル実行
-```bash
-cd server
-go run main.go
-```
-ブラウザで `http://localhost:8080` にアクセス。
+## Run
 
-### Docker
-```bash
-docker build -t stardust-defense .
-docker run -p 8080:8080 stardust-defense
+Run the Go server with `cd server && go run .` and open `http://127.0.0.1:8080/`, or open `client/index.html` directly for a static browser review.
+
+## Validate
+
+```sh
+npm --prefix client test
+npm --prefix client run build
 ```
 
-### Kubernetes (Helm)
-```bash
-helm install stardust-defense ./charts/stardust-defense
-```
-
-## リポジトリ構成
-- `server/`: Go 製バックエンド (HTTP サーバー、ゲームロジック)
-- `client/`: フロントエンド (HTML/CSS/JS)
-- `docs/`: 設計書、QA 報告、デプロイメントガイド
-- `charts/`: Helm チャート
-- `k8s/`: 手動 Kubernetes マニフェスト
-
-## ドキュメント
-- [Artifact Contract](docs/artifact-contract.md): 成果物の接続仕様
-- [QA Report](docs/qa-report.md): Sprint 1 検証結果
-- [Deployment Guide](docs/deployment.md): 運用手順
-
----
-*このプロジェクトは新規性のあるインベーダーゲームの実装を目的としています。*
+Both scripts use `node --check` from `client/package.json` and do not require package installation.
