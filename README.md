@@ -1,31 +1,56 @@
-# One-Button Invaders
+# Nova Invader
 
-This repository started empty. ARUN generated a minimal static browser game with a gravity-lane mechanic so an implementation-heavy scrum workflow can produce reviewable code, documentation, and validation artifacts without GitHub API calls.
+## 概要
+**Nova Invader** は、Go とバニラ JavaScript で構築された、新規性のあるインベーダーゲームです。
+従来のインベーダーゲームの枠組みを維持しつつ、「重力反転」メカニクスを実装し、プレイヤーに新たな戦略的深みを提供します。
 
-## Repository layout
+## Sprint 1 成果物概要
+Sprint 1 では、以下の最小限の機能実装とインフラストラクチャを完了しました。
 
-- `server/` contains the Go HTTP entrypoint.
-- `client/` contains the browser UI served from `/`.
-- `charts/` and `k8s/` contain deployment artifacts when present.
-- `docs/` contains product and validation notes.
+- **コアゲームプレイ**: 基本的な移動、射撃、敵の出現ロジック。
+- **差別化メカニクス**: 「重力反転」ボタンによる画面上下の反転操作。
+- **UI/UX**: レスポンシブなブラウザゲーム画面。
+- **インフラ**: Go HTTP サーバー、Dockerfile、Helm Chart、GitHub Actions CI。
 
-## Features
+## ユーザー体験
+1. ブラウザでゲームにアクセス。
+2. 矢印キーで移動、スペースキーで射撃。
+3. 「重力反転」ボタンを押して敵の軌道と自機の重力方向を反転させ、回避や攻撃のチャンスを作る。
 
-- Keyboard controls with ArrowLeft, ArrowRight, and Space.
-- Space flips the defender between floor and ceiling gravity lanes.
-- Score display that increments only when the defender is horizontally aligned and on the same gravity lane as the invader.
-- Lives tracking that decrements when an invader reaches the bottom of the arena.
-- Restart behavior that resets score, lives, player position, and invader position.
+## セットアップと実行
 
-## Run
+### ローカル実行
+```bash
+# サーバー起動
+go run ./server/cmd/main.go
 
-Run the Go server with `cd server && go run .` and open `http://127.0.0.1:8080/`, or open `client/index.html` directly for a static browser review.
-
-## Validate
-
-```sh
-npm --prefix client test
-npm --prefix client run build
+# ブラウザで http://localhost:8080 にアクセス
 ```
 
-Both scripts use `node --check` from `client/package.json` and do not require package installation.
+### Docker 実行
+```bash
+docker build -t nova-invader .
+docker run -p 8080:8080 nova-invader
+```
+
+## 検証コマンド
+
+### ヘルスチェック
+```bash
+curl http://localhost:8080/health
+```
+
+### テスト実行
+```bash
+go test ./...
+```
+
+## リポジトリ構成
+- `server/`: Go アプリケーション本体
+- `client/`: フロントエンドアセット (HTML/CSS/JS)
+- `charts/`: Helm チャート
+- `docs/`: 設計書および契約定義
+
+## 既知の制限事項
+- 音声エフェクトは実装していません。
+- 高スコアランキング機能は未実装です。
