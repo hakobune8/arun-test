@@ -1,24 +1,86 @@
-# Product Brief: Product Brief Md
+# Rhythm Invaders — Product Brief
 
 ## Concept
 
-Product Brief Md is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+**Rhythm Invaders**は、音楽のリズムに合わせて敵を倒すインベーダーゲームです。通常のインベーダーゲームでは「敵が近づいてきたら撃つ」が基本ですが、本作では**リズムの拍に合わせて撃つと追加効果が発生**する仕組みを採用しています。
 
-## Target User
+- リズムに合わせた正確なタイミングで撃つと、通常より大きなダメージまたは特殊攻撃が発動する
+- バックビート（2・4拍目）に合わせて撃つと、画面内の敵全体に波及ダメージが発生する
+- 連打ではなく「間」を読むプレイが評価される
 
-- Players who want a short arcade loop with one clear twist.
-- Reviewers who need a fresh-checkout slice that runs without external services.
+## Target Users
+
+- シンプルなアーケードゲームを好むカジュアルゲーマー
+- リズムゲームとシューティングゲームの両方に興味があるユーザー
+- 短時間で遊べるミニマルなゲーム体験を求めるユーザー
+
+## Core Loop
+
+1. 音楽（BGM）が流れる
+2. 敵が画面下から出現し、リズムに合わせて移動する
+3. プレイヤーはスペースキー（またはクリック）で弾を発射
+4. **リズムの拍に合わせて撃つと、ダメージ倍率が上昇**する
+5. 敵を全滅させると次のフェーズへ
+6. 敵の弾に当たるとライフを失う
+
+## Differentiating Behavior
+
+| 要素 | 通常インベーダー | Rhythm Invaders |
+|------|-----------------|-----------------|
+| 攻撃タイミング | 任意 | リズムの拍が重要 |
+| スコア計算 | 敵の種類で固定 | タイミング精度で倍率が変動 |
+| ゲーム進行 | 敵の出現パターン | BGMのテンポと連動 |
+| 操作の焦点 | 移動と連射 | 「間」の読みとタイミング |
 
 ## Acceptance Criteria
 
-- The visible title, README H1, and this product brief use the same product name.
-- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
-- Space changes the gravity lane between Floor and Ceiling.
-- A score is awarded only when the defender is aligned with the invader and on the same lane.
-- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
+### AC-1: リズム同期メカニクス
+- [ ] BGMのテンポ（BPM）が可視化される（拍のタイミングを視覚的に示すインジケーター）
+- [ ] リズムの拍に合わせて撃つと、通常ダメージの1.5倍以上のダメージが発生する
+- [ ] バックビート（2・4拍目）に合わせて撃つと、画面内の敵全体に波及ダメージが発生する
+- [ ] タイミング精度は±100ms以内で「パーフェクト」と判定される
+
+### AC-2: コアプレイ
+- [ ] スペースキーまたはマウスクリックで弾を発射できる
+- [ ] 矢印キーまたはA/Dキーで自機を左右に移動できる
+- [ ] 敵の弾に当たるとライフが1減る（初期ライフ: 3）
+- [ ] 全敵を倒すと次のフェーズへ進む
+
+### AC-3: UI/UX
+- [ ] ゲームタイトル画面で「Rhythm Invaders」と表示される
+- [ ] ゲーム中にスコア、ライフ、現在のフェーズが表示される
+- [ ] ゲームオーバー画面で最終スコアとリトライボタンが表示される
+- [ ] 視覚的にポップでシンプルなデザイン
+
+### AC-4: 新規性
+- [ ] 拍に合わせて撃つことで追加効果が発生するメカニクスが実装されている
+- [ ] 連射ではなくタイミング重視のプレイが成立する
 
 ## Non-Goals
 
-- Multiplayer.
-- External score services.
-- Complex level progression.
+- 複数プレイヤー対応（Sprint 1では1Pのみ）
+- オンラインスコアランキング
+- 外部サービスとの連携
+- 複雑なストーリーモード
+- 高解像度のグラフィックス（Canvasベースのシンプルな描画で十分）
+
+## QA Verification Guide
+
+| 定性的要求 | 観測可能な基準 |
+|-----------|---------------|
+| 新規性 | リズムの拍に合わせて撃つと通常より大きなダメージが発生する |
+| 楽しい | バックビート連打で画面クリアできる快感がある |
+| ポップ | 明るい色使い、シンプルなUI、視覚的なフィードバックがある |
+| シンプル | 操作は矢印キー＋スペースキーのみ、ルールが一目でわかる |
+| production-ready | ローカルでビルド・実行可能、エラーなく起動する |
+
+## Technical Notes
+
+- フロントエンド: HTML5 Canvas + Vanilla JS（外部依存なし）
+- バックエンド: Go net/http（静的ファイル配信 + /healthz）
+- BGM: Web Audio API で生成する簡易シンセサウンド（外部ファイル不要）
+- 開発環境: Go 1.21+、ブラウザのみで動作
+
+---
+
+*この文書は Sprint 1〜3 の実装・ドキュメントの唯一の Source of Truth です。*

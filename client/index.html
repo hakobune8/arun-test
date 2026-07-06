@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rhythm Invaders</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="hud">
+      <div id="score">Score: 0</div>
+      <div id="combo">Combo: 0</div>
+      <div id="beat-indicator">♪</div>
+    </div>
+    <div id="start-screen">
+      <h1>Rhythm Invaders</h1>
+      <p>リズムに合わせて敵を倒せ！</p>
+      <button id="start-btn">ゲームスタート</button>
+      <p class="instructions">← → で移動 | スペースで射撃 | リズム同期でコンボボーナス</p>
+    </div>
+  </div>
+  <script src="/game.js"></script>
+</body>
+</html>
