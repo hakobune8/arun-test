@@ -1,46 +1,36 @@
-# Product Brief: Gravity Flip Invader
+# Neon Orbit — Product Brief
 
-## 1. Concept
-**Gravity Flip Invader** is a vertical scrolling shooter (shmup) that subverts the classic "Invader" genre by introducing a gravity inversion mechanic. Instead of being confined to the bottom of the screen, the player can flip gravity to walk on the ceiling, creating a 360-degree tactical playfield within a 2D vertical space.
+## Concept
+Neon Orbit は、軌道を描く敵を回避しながら射撃するインベーダーゲーム。従来の「上から降ってくる敵」ではなく、プレイヤーの周りを円軌道で回る敵を、角度計算で狙撃する。シンプルながら戦略的なプレイが特徴。
 
-## 2. Target User
-- **Retro Game Enthusiasts**: Players who enjoy classic arcade mechanics but seek a fresh twist.
-- **Developers**: Reviewers looking for a clean, idiomatic Go backend with a lightweight frontend, demonstrating clean architecture principles.
+## Target User
+- シンプルなアーケードゲームを好むカジュアルゲーマー
+- 短時間で遊べるミニマルなゲームを求めているユーザー
+- レトロなビジュアルとポップな音楽を好む層
 
-## 3. Core Loop
-1. **Move**: Player moves left/right and up/down (relative to current gravity).
-2. **Flip**: Player presses a key to invert gravity, switching between floor and ceiling.
-3. **Shoot**: Player fires bullets towards the "floor" (direction of gravity).
-4. **Survive**: Dodge enemy fire and projectiles while eliminating invaders.
+## Core Loop
+1. プレイヤーは画面下部で左右移動
+2. 敵がプレイヤーの周りを円軌道で回転しながら降下
+3. プレイヤーは敵の軌道を予測して射撃
+4. 全敵撃破で次のステージ（回転速度・パターン変化）
+5. 敵に衝突または画面下端到達でゲームオーバー
 
-## 4. Differentiating Mechanic: Gravity Flip
-The core novelty is the **Gravity Flip**. This is not just a visual change; it fundamentally alters gameplay physics and controls.
+## Differentiating Behavior
+- **軌道予測射撃**: 敵が円運動するため、単純な照準ではなく軌道読みが重要
+- **ネオンビジュアル**: 発光エフェクトと残像でポップな雰囲気
+- **ミニマル操作**: 矢印キー（移動）+ スペース（射撃）のみ
 
-### Observable Behavior (Review Criteria)
-- **Control Inversion**: When gravity is inverted, the "Up" key moves the player towards the ceiling, and "Down" moves them towards the floor.
-- **Visual Feedback**: The player sprite rotates 180 degrees upon flipping.
-- **Projectile Direction**: Bullets always fire in the direction of the current gravity (downwards relative to the player's current orientation).
-- **Collision**: Collision detection updates dynamically based on the player's current position relative to the screen boundaries (top or bottom).
+## Acceptance Criteria
+| 定性要求 | 観測可能な基準 |
+|---------|--------------|
+| 新規性 | 敵が円軌道で移動する mechanic が実装されている |
+| 楽しい | 敵を撃破するフィードバック（エフェクト/スコア表示）がある |
+| ポップ | ネオンカラーの発光エフェクトが適用されている |
+| シンプル | 操作は矢印キー＋スペースのみ、UI は最小限 |
+| Production-ready | /healthz エンドポイントが存在し、200 OK を返す |
 
-## 5. Non-Goals (Sprint 1)
-- **Multiplayer**: Single-player only.
-- **Complex Levels**: Procedural or fixed level design is out of scope; focus on a single continuous wave.
-- **Sound/Music**: Placeholder or no sound for Sprint 1.
-- **High-Res Assets**: Use simple geometric shapes or pixel art placeholders.
-- **External Services**: No database, no external APIs. Everything runs locally or in a container.
-
-## 6. Sprint 1 Acceptance Criteria
-- [ ] **Gravity Flip**: Player can invert gravity, and controls update accordingly.
-- [ ] **Game Loop**: The game runs in a loop with enemies spawning and moving.
-- [ ] **Shooting**: Player can fire bullets, and they travel in the direction of gravity.
-- [ ] **UI**: A simple HTML/JS frontend renders the game canvas and score.
-- [ ] **Backend**: Go server serves the frontend assets and handles game state logic (or serves as a WebSocket/HTTP endpoint for game state if applicable, but for Sprint 1, a static server with client-side logic is acceptable if it demonstrates the architecture).
-- [ ] **Docker**: The application can be built and run via Docker.
-- [ ] **Helm**: A Helm chart is provided for Kubernetes deployment.
-- [ ] **CI**: GitHub Actions runs tests and linting.
-
-## 7. Technical Stack
-- **Backend**: Go (net/http, standard library).
-- **Frontend**: Vanilla JavaScript, HTML5 Canvas, CSS.
-- **Deployment**: Docker, Helm.
-- **CI**: GitHub Actions.
+## Non-Goals
+- マルチプレイヤー機能
+- 外部サービス連携（スコアランキング等）
+- 複雑なストーリー展開
+- モバイル対応（Sprint 1 では対象外）
