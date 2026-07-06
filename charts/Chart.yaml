@@ -1,6 +1,0 @@
-apiVersion: v2
-name: arun-test
-description: A minimal Go HTTP server for the arun-test project
-type: application
-version: 0.1.0
-appVersion: "0.1.0"
