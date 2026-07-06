@@ -1,24 +1,71 @@
-# Product Brief: Product Brief Md
+# Pop Invaders — Product Brief
 
 ## Concept
 
-Product Brief Md is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+**Pop Invaders** は、ポップなビジュアルとシンプルな操作で楽しめるブラウザインベーダーゲームです。弾を「弾く（ポップ）」ことで敵を倒すという、従来のインベーダーゲームとは異なるコアメカニクスを提供します。
 
 ## Target User
 
-- Players who want a short arcade loop with one clear twist.
-- Reviewers who need a fresh-checkout slice that runs without external services.
+- ブラウザで手軽にプレイできるカジュアルゲームを好むユーザー
+- 短時間で遊べるミニマルなゲーム体験を求めるユーザー
+- レトロなゲームの雰囲気と現代的なポップなビジュアルの両方に興味を持つユーザー
 
-## Acceptance Criteria
+## Core Loop
 
-- The visible title, README H1, and this product brief use the same product name.
-- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
-- Space changes the gravity lane between Floor and Ceiling.
-- A score is awarded only when the defender is aligned with the invader and on the same lane.
-- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
+1. 敵キャラクターが画面上部から下降してくる
+2. プレイヤーは自機を左右に移動し、敵の弾を「ポップ（弾く）」操作で跳ね返す
+3. 跳ね返った弾が敵に当たると敵を倒せる
+4. 敵を全て倒すと次のステージへ
+5. 自機のライフが0になるとゲームオーバー
+
+## Differentiating Behavior
+
+- **弾くメカニクス**: 従来の「撃って倒す」ではなく、「弾を跳ね返して逆襲する」というインタラクション
+- **ポップなビジュアル**: 丸みを帯びた形状、明るいカラーパレット、アニメーションによるフィードバック
+- **シンプル操作**: 左右移動＋ポップ操作の2操作のみでプレイ可能
 
 ## Non-Goals
 
-- Multiplayer.
-- External score services.
-- Complex level progression.
+- マルチプレイヤー機能
+- 外部サービス連携（スコアランキング等）
+- 複雑なストーリー展開
+- モバイル最適化（Sprint 1では対象外）
+
+## Acceptance Criteria
+
+### AC-1: ゲームプレイ
+- [ ] ブラウザでアクセスするとゲーム画面が表示される
+- [ ] 自機が左右に移動可能（キーボード操作）
+- [ ] ポップ操作で敵の弾を跳ね返せる
+- [ ] 跳ね返った弾が敵に当たると敵が倒れる
+- [ ] 敵を全て倒すと次のステージへ進める
+- [ ] ライフが0になるとゲームオーバー画面が表示される
+
+### AC-2: ビジュアル
+- [ ] ポップなカラーパレット（明るい色使い）が適用されている
+- [ ] 弾く操作に視覚的フィードバック（エフェクト等）がある
+- [ ] ゲームタイトルが画面に表示されている
+
+### AC-3: 技術
+- [ ] Go HTTPサーバーで提供される
+- [ ] `/healthz` エンドポイントが200を返す
+- [ ] ローカルで `go run` して起動可能
+- [ ] Dockerイメージでビルド可能
+
+## Qualitative Requirements → Observable Criteria
+
+| 意図 | 観察可能な基準 |
+|------|---------------|
+| 新規性 | 「弾く」メカニクスが実装され、従来のインベーダーとは異なるインタラクションを提供している |
+| 楽しい | ポップなビジュアルとアニメーションによるフィードバックがある |
+| ポップ | 明るいカラーパレット、丸みを帯びた形状、アニメーションが適用されている |
+| シンプル | 操作は左右移動＋ポップの2操作のみ |
+| production-ready | `/healthz` エンドポイント、Dockerビルド、Kubernetesマニフェストが提供されている |
+
+## Sprint 1 Scope
+
+- Go HTTPサーバーの最小実装
+- `/` でゲーム画面（HTML/CSS/JS）を提供
+- `/healthz` ヘルスチェックエンドポイント
+- ローカル起動とDockerビルドの検証
+- 基本的なゲームプレイループ（移動、ポップ、敵の出現と倒壊）

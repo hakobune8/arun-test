@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wobble Invaders — 波打つ宇宙防衛戦</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="hud">
+      <div id="score">Score: 0</div>
+      <div id="lives">Lives: ♥♥♥</div>
+      <div id="stabilize-indicator">Wobble: <span id="wobble-status">ON</span></div>
+    </div>
+    <div id="overlay" class="hidden">
+      <h1 id="overlay-title">Wobble Invaders</h1>
+      <p id="overlay-message">波打つ動きで敵を倒せ！</p>
+      <p id="overlay-score"></p>
+      <button id="start-btn">Start Game</button>
+    </div>
+    <div id="controls-hint">
+      <span>← → : 移動</span>
+      <span>SPACE : 発射</span>
+      <span>SHIFT : 安定化（Wobble OFF）</span>
+    </div>
+  </div>
+  <script src="/game.js"></script>
+</body>
+</html>
