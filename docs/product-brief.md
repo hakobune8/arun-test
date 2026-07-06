@@ -1,66 +1,24 @@
-# Product Brief: 星屑インベーダー (Stardust Invader)
+# Product Brief: One-Button Invaders
 
-## 概要
+## Concept
 
-**星屑インベーダー**は、従来のインベーダーゲームに「軌道予測」と「パーティクルエフェクト」を組み合わせた、シンプルながら新規性のあるブラウザゲームです。プレイヤーは自機を操作して敵を撃破し、パーティクルの爆発エフェクトで視覚的な満足を得ます。
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
-## 対象ユーザー
+## Target User
 
-- ブラウザで手軽にプレイできるカジュアルゲームを好むユーザー
-- シンプルな操作で没入感のあるゲーム体験を求めるユーザー
-- 短時間で遊べるミニマルなゲームを好むユーザー
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
-## コアループ
+## Acceptance Criteria
 
-1. **敵の出現**: 画面上部から敵が一定パターンで出現
-2. **プレイヤー操作**: 矢印キーまたはマウスで自機を移動
-3. **攻撃**: スペースキーまたはクリックで弾を発射
-4. **パーティクル爆発**: 敵撃破時にパーティクルエフェクトが発生
-5. **スコア加算**: 敵撃破でスコア加算、ライフ減少でゲームオーバー
-6. **リトライ**: ゲームオーバー後、すぐにリトライ可能
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
 
-## 差別化要素
+## Non-Goals
 
-1. **軌道予測ライン**: 敵の移動軌道が半透明で表示され、プレイヤーが次の動きを予測可能
-2. **パーティクル爆発**: 敵撃破時に色付きのパーティクルが飛び散る視覚エフェクト
-3. **ポップなビジュアル**: 明るいカラーパレットとシンプルな形状で、親しみやすいデザイン
-
-## 受け入れ基準 (Acceptance Criteria)
-
-### 新規性
-- [ ] 軌道予測ラインが敵の移動に合わせてリアルタイムで表示される
-- [ ] パーティクル爆発エフェクトが敵撃破時に発生する
-
-### 楽しい
-- [ ] ゲームオーバーから3秒以内にリトライ可能
-- [ ] 敵撃破時のパーティクルエフェクトが視覚的に満足感を誘発する
-
-### ポップ
-- [ ] カラーパレットが明るく、親しみやすいデザイン
-- [ ] UI要素がシンプルで直感的
-
-### シンプル
-- [ ] 操作は矢印キー（移動）とスペースキー（発射）のみ
-- [ ] ルール説明が不要で、直感的にプレイ可能
-
-### Production-ready
-- [ ] `/healthz` エンドポイントが正常応答を返す
-- [ ] Docker コンテナで起動可能
-- [ ] Kubernetes にデプロイ可能
-
-## ノンゴールズ (Non-goals)
-
-- マルチプレイヤー機能
-- 外部サービス連携（スコアランキング等）
-- 複雑なストーリーやクエスト
-- モバイルネイティブアプリ
-
-## QA 判定基準
-
-| 定性要求 | 観測可能な基準 |
-|---------|--------------|
-| 新規性 | 軌道予測ラインとパーティクル爆発が実装され、動作すること |
-| 楽しい | ゲームオーバーからリトライまでシームレス、エフェクトが視覚的に魅力的 |
-| ポップ | 明るいカラーパレット、シンプルで親しみやすいUI |
-| シンプル | 最小限の操作でプレイ可能、ルール説明不要 |
-| Production-ready | Health endpoint 正常応答、Docker/K8s デプロイ成功 |
+- Multiplayer.
+- External score services.
+- Complex level progression.
