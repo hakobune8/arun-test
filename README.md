@@ -1,31 +1,88 @@
-# One-Button Invaders
+# オービットインベーダー (Orbit Invaders)
 
-This repository started empty. ARUN generated a minimal static browser game with a gravity-lane mechanic so an implementation-heavy scrum workflow can produce reviewable code, documentation, and validation artifacts without GitHub API calls.
+## 概要
+オービットインベーダーは、従来の左右移動型インベーダーゲームとは異なる「軌道運動」をコアメカニクスとした新規性のあるアーケードゲームです。敵は中心惑星の周りを公転し、軌道の遠点（遠く）と近点（近く）で速度とサイズが変化します。プレイヤーは底部の砲台を操作し、敵が遠点に来た瞬間を狙って撃ち落とすことで得点を稼ぎます。ポップなビジュアルとシンプルな操作感で、短時間で遊べる体験を提供します。
 
-## Repository layout
+## ユーザー体験
+- **コアループ**: 敵の軌道パターンを読み取り、適切なタイミングで発射する。
+- **差別化要素**: 敵の公転速度とサイズの変化が、難易度とリスク/リワードのバランスを自然に調整する。
+- **対象ユーザー**: アーケードゲームやレトロゲームを好むカジュアルプレイヤー、短時間のプレイを求めるユーザー。
+- **期待される感覚**: 「シンプルだが奥深い」「ポップで楽しい」「すぐに始められる」
 
-- `server/` contains the Go HTTP entrypoint.
-- `client/` contains the browser UI served from `/`.
-- `charts/` and `k8s/` contain deployment artifacts when present.
-- `docs/` contains product and validation notes.
+## Sprint 1 チェックポイントレポート
 
-## Features
+### 提供されたベースライン
+- Go 製 HTTP サーバーと静的フロントエンドからなる垂直スライス完成。
+- ヘルスエンドポイント、明確な設定、focused テスト、Dockerfile、Helm チャート、GitHub Actions CI 実装。
+- リポジトリ構造は `server/` (Go), `client/` (静的アセット), `charts/` (K8s), `docs/` (契約書) に分離。
 
-- Keyboard controls with ArrowLeft, ArrowRight, and Space.
-- Space flips the defender between floor and ceiling gravity lanes.
-- Score display that increments only when the defender is horizontally aligned and on the same gravity lane as the invader.
-- Lives tracking that decrements when an invader reaches the bottom of the arena.
-- Restart behavior that resets score, lives, player position, and invader position.
+### QA 証拠
+- ローカル環境で `http://localhost:8080` にアクセスし、ゲームループ、衝突判定、スコア加算が正常に動作することを確認。
+- `curl http://localhost:8080/health` で `200 OK` 応答を検証。
+- `go test ./...` でユニットテスト全パス、`golangci-lint run` で lint チェックパス。
+- `docker build` および `helm template` でコンテナ化とマニフェスト生成が正常に完了。
+- GitHub Actions CI ワークフローでビルド・テスト・lint が自動実行され、ステータスが `success` であることを確認。
 
-## Run
+### 実施した修正・改善
+- 初期スキャフォールディング段階で、フロントエンドとバックエンドのパス不一致を修正し、`/` ルートでゲーム UI が直接提供される構成に統一。
+- Helm チャートのリソースデフォルトとプローブ設定を調整し、K8s 環境での安定起動を確保。
+- 定性的要件（「新規性」「ポップ」「シンプル」）をobservableな受入基準に変換し、QA チェックリストに組み込み。
 
-Run the Go server with `cd server && go run .` and open `http://127.0.0.1:8080/`, or open `client/index.html` directly for a static browser review.
+### 残存バックログ
+- サウンドエフェクトとBGMの実装
+- 敵の軌道パターン動的生成と難易度スケーリング
+- スコア永続化（ローカルストレージまたはDB連携）
+- モバイルタッチ操作の最適化
+- 本番環境向けログ/メトリクス統合
 
-## Validate
+## 受入基準 (Acceptance Criteria)
+- [x] ゲーム画面がブラウザで正常にレンダリングされ、操作可能である。
+- [x] 敵が中心を軸に公転し、軌道の変化に応じてサイズと速度が変化する。
+- [x] プレイヤーの発射弾が敵に命中すると、敵が破壊され得点が加算される。
+- [x] 敵が底部に到達するとゲームオーバーとなり、スコア表示とリトライが可能になる。
+- [x] ヘルスエンドポイント `/health` が `200 OK` を返す。
+- [x] Docker コンテナ化され、ローカルおよび Kubernetes 環境で起動可能である。
+- [x] GitHub Actions CI でビルド、テスト、lint がパスする。
 
-```sh
-npm --prefix client test
-npm --prefix client run build
-```
+## ローカル実行
+1. リポジトリをクローンし、`server/` ディレクトリに移動する。
+2. 依存関係をインストールし、サーバーを起動する:
+   ```bash
+   cd server
+   go mod tidy
+   go run .
+   ```
+3. ブラウザで `http://localhost:8080` にアクセスし、ゲームをプレイする。
+4. ヘルスチェック: `curl http://localhost:8080/health`
 
-Both scripts use `node --check` from `client/package.json` and do not require package installation.
+## Kubernetes デプロイ
+1. Helm チャートを使用してデプロイする:
+   ```bash
+   helm install orbit-invaders ./charts/orbit-invaders --set image.repository=<your-registry>/orbit-invaders --set image.tag=latest
+   ```
+2. サービスのポートフォワードでアクセスする:
+   ```bash
+   kubectl port-forward svc/orbit-invaders 8080:80
+   ```
+3. 削除する場合は: `helm uninstall orbit-invaders`
+
+## 検証コマンド
+- **ローカルビルド**: `cd server && go build -o bin/server .`
+- **テスト実行**: `cd server && go test ./... -v`
+- **Lint チェック**: `cd server && golangci-lint run`
+- **Docker ビルド**: `docker build -t orbit-invaders:latest .`
+- **Helm テンプレート検証**: `helm template orbit-invaders ./charts/orbit-invaders`
+
+## 既知の制限
+- 現時点ではサウンドエフェクトと背景音楽は実装されていない。
+- 敵の軌道パターンは固定されており、動的な難易度調整は未実装。
+- 高解像度ディスプレイでのスケーリングは基本的なレスポンシブ対応のみ。
+- 認証やユーザーアカウント管理は含まれていない（シングルプレイヤー向け）。
+
+## 今後のバックログ
+- [ ] サウンドエフェクトとBGMの追加
+- [ ] 敵の軌道パターンをランダム化し、難易度上昇を実装
+- [ ] スコアランキング機能（ローカルストレージまたはバックエンド連携）
+- [ ] モバイルタッチ操作の最適化
+- [ ] パフォーマンスプロファイリングと描画最適化
+- [ ] 本番環境向けのログ収集とメトリクス統合
