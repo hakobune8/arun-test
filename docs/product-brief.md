@@ -1,24 +1,83 @@
-# Product Brief: One-Button Invaders
+# Starfall — 色彩リズム・インベーダー
 
-## Concept
+## 概要
 
-One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+**Starfall** は、従来のインベーダーゲームの「破壊」ではなく「収集」に焦点を当てた、リズムと色彩認識を核としたミニマルなアーケードゲームです。
 
-## Target User
+プレイヤーは画面下部の「ネット」を左右に動かし、落下する星をキャッチします。ただし、ネットのシールドは一定のリズムで色を変化するため、**現在のシールド色と一致する星のみ**をキャッチできます。外れた星は減点対象となります。
 
-- Players who want a short arcade loop with one clear twist.
-- Reviewers who need a fresh-checkout slice that runs without external services.
+## 対象ユーザー
 
-## Acceptance Criteria
+- アーケードゲームやミニマルゲームを好むカジュアルゲーマー
+- リズムゲームやパズル要素を好むユーザー
+- シンプルで美しいUIを重視するユーザー
 
-- The visible title, README H1, and this product brief use the same product name.
-- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
-- Space changes the gravity lane between Floor and Ceiling.
-- A score is awarded only when the defender is aligned with the invader and on the same lane.
-- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `go run ./server`.
+## コアループ
 
-## Non-Goals
+1. 星が画面の上部から落下する
+2. ネットのシールドがリズムに合わせて色を変化（例：赤→青→黄→赤…）
+3. プレイヤーはキーボード（←→）またはマウスでネットを操作
+4. シールド色と星の色が一致している場合のみキャッチ成功
+5. キャッチ成功でスコア加算、失敗で減点
+6. 一定スコアでレベルアップ（落下速度上昇、リズム変化）
 
-- Multiplayer.
-- External score services.
-- Complex level progression.
+## 差別化される行動
+
+| 従来のインベーダー | Starfall |
+|---|---|
+| 弾を発射して敵を破壊 | 弾を発射せず、星を収集 |
+| 反射神経が主 | リズム認識と色彩判断が主 |
+| 敵の配置パターンが中心 | シールド色の変化パターンが中心 |
+| 攻撃中心の体験 | 受容・収集中心の体験 |
+
+## 定性的要求 → 観測可能基準
+
+| 定性的要求 | 観測可能基準 |
+|---|---|
+| **新規性** | シールド色マッチングという独自 mechanic が実装され、従来のインベーダーとは明確に異なる |
+| **楽しい** | ゲームプレイ中にスコアが上昇するフィードバックが明確（スコア表示、キャッチエフェクト） |
+| **ポップ** | 高彩度の3色（赤/青/黄）を基調としたミニマルなビジュアル、アニメーション付き |
+| **シンプル** | 操作は左右移動のみ、ルールは1画面で説明可能 |
+| **production-ready** | ローカルでビルド・実行可能、Docker化済み、Kubernetesデプロイ対応 |
+
+## 非目標（Non-goals）
+
+- 複数プレイヤー対応
+- ネットワーク機能
+- 複雑なストーリーやキャラクター設定
+- 外部サービス連携
+- 高解像度アセットや3Dグラフィックス
+
+## 受け入れ基準（Acceptance Criteria）
+
+### AC-1: ゲームプレイ
+- [ ] プレイヤーはキーボード（←→）でネットを左右に移動できる
+- [ ] 星が画面上部から落下する
+- [ ] シールドは一定間隔で色を変化し、現在の色が視覚的に明確にわかる
+- [ ] シールド色と星の色が一致する星のみキャッチ可能
+- [ ] キャッチ成功時にスコアが加算される
+- [ ] キャッチ失敗時に減点される
+
+### AC-2: UI/UX
+- [ ] ゲームタイトル「Starfall」が画面に表示される
+- [ ] スコア表示が画面の上部に常時表示される
+- [ ] ゲームオーバー画面で最終スコアとリトライオプションが表示される
+- [ ] 3色（赤/青/黄）の星が落下する
+
+### AC-3: 技術要件
+- [ ] Go HTTPサーバーで提供される
+- [ ] HTML/CSS/JSの静的ファイルとしてフロントエンドが提供される
+- [ ] ローカルで `go run` により起動可能
+- [ ] Dockerfile によりコンテナ化可能
+- [ ] Helm chart によりKubernetesデプロイ可能
+
+## 実装優先度
+
+1. **P0**: コアゲームループ（移動・落下・色マッチング・スコア）
+2. **P1**: ゲームオーバー処理・リトライ
+3. **P2**: レベルアップ（速度上昇）
+4. **P3**: キャッチエフェクト・サウンド
+
+---
+
+*このドキュメントは、Starfall プロダクトの唯一の source of truth です。実装・ドキュメント・テストはすべてこの brief に従って作成してください。*
