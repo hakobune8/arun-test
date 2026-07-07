@@ -1,84 +1,24 @@
-# Product Brief: Gravity Deflection (重力反転インベーダー)
+# Product Brief: One-Button Invaders
 
 ## Concept
 
-**Gravity Deflection** — 重力を操作して弾を反転・回避する、ミニマルでポップなインベーダーゲーム。
-
-プレイヤーは自機を左右に移動させるだけでなく、画面下部の「重力スイッチ」を押すことで**重力の向きを反転**できます。これにより、敵の弾がプレイヤー側に引き寄せられて反転し、敵弾を敵味方同士の衝突で消すことができます。自機自体も重力反転で画面の天井に吸い寄せられ、空中で弾を回避する戦略が可能です。
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
 ## Target User
 
-- 短時間のプレイを好むカジュアルゲーマー
-- シンプルな操作で深い戦略を楽しみたいプレイヤー
-- 1〜3分のセッションで遊べるゲームを求めている人
-
-## Core Loop
-
-1. **敵の出現** — 画面からインベーダーが降下し、弾を発射
-2. **重力の選択** — プレイヤーは通常移動 / 重力反転 / 自機攻撃の3つのアクションから選択
-3. **弾の反転** — 重力反転で敵弾を自機側に引き寄せ、敵同士で衝突させる
-4. **スコア獲得** — 敵を倒すたびにスコア加算、コンボでボーナス
-5. **難易度上昇** — 敵の速度・弾の数が増加
-
-## Differentiating Behavior
-
-| 従来のインベーダー | Gravity Deflection |
-|---|---|
-| 自機は画面下部のみ移動 | 重力反転で天井方向にも移動可能 |
-| 敵弾は避けるのみ | 敵弾を反転させて敵にぶつける |
-| 回避が主 | 攻撃と回避の境界が曖昧（弾の流用） |
-| 操作は左右のみ | 左右移動 + 重力スイッチ（1ボタンで戦略変化） |
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
 ## Acceptance Criteria
 
-### AC-1: 重力反転メカニクス
-- [ ] プレイヤーが重力スイッチを押すと、敵弾の軌道が反転する
-- [ ] 反転した弾が敵に衝突すると敵が破壊される
-- [ ] 自機も重力反転で天井方向に移動可能
-- [ ] 重力反転はクールダウン（1.5秒）でバランス調整
-
-### AC-2: ポップでミニマルなUI
-- [ ] 画面は5色以内のカラーパレットで構成
-- [ ] 敵弾、自機弾、爆発エフェクトが視覚的に明確に区別可能
-- [ ] スコア、ライフ、重力状態が画面端に常時表示
-- [ ] 日本語ラベルを使用（スコア、ライフ、ゲームオーバーなど）
-
-### AC-3: シンプルな操作
-- [ ] 操作は矢印キー（左右移動）とスペースキー（重力反転）のみ
-- [ ] 説明画面は1画面に収まる簡潔なテキスト
-- [ ] リアルタイムでスコアが更新され、達成感が得られる
-
-### AC-4: 新規性
-- [ ] 弾を反転させて敵を倒すメカニクスが実装されている
-- [ ] 重力反転による自機の空中移動が可能
-- [ ] 従来のインベーダーにはない戦略的深度がある
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
 
 ## Non-Goals
 
-- 複数プレイヤー対応
-- ネットワーク機能
-- 高解像度アセットやサウンド
-- 複雑なストーリーやキャラクター設定
-- 複数ステージやボス戦
-
-## Qualitative → Observable Criteria
-
-| 定性要求 | 観測可能な基準 |
-|---|---|
-| 新規性 | 弾の反転メカニクスが実装され、敵を倒せる |
-| 楽しい | 弾を反転させて敵を倒すプレイが自然に繰り返される |
-| ポップ | 5色以内のカラーパレット、明瞭な視覚的区別 |
-| シンプル | 操作は2つのキーのみ、説明は1画面 |
-| Production-ready | ローカルでビルド・実行可能、エラーメッセージが明確 |
-
-## Primary Route
-
-1. ブラウザで `/` にアクセス
-2. ゲーム画面が表示され、操作説明が表示される
-3. スペースキーでゲーム開始
-4. 矢印キーで移動、スペースキーで重力反転
-5. スコアが記録され、ゲームオーバー後にリトライ可能
-
----
-
-*このドキュメントは Gravity Deflection プロダクトの唯一の source of truth です。実装、ドキュメント、UI ラベルはすべてこの brief に従ってください。*
+- Multiplayer.
+- External score services.
+- Complex level progression.

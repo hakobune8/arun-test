@@ -1,64 +1,36 @@
-# Artifact Contract
+# Artifact Contract: One-Button Invaders
 
-この文書は、`docs/product-brief.md` の製品コンセプトを具体的な実装ファイル、ルート、検証コマンドに接続する契約書です。実装・レビュー・QAはこの契約に従って進めます。
+This contract is the implementation source of truth for how generated artifacts connect. Product intent lives in `docs/product-brief.md`; this file defines the route, file, module, and validation expectations that backend, frontend, QA, Docker, Helm, and documentation work must preserve.
 
-## 1. Primary Route & User Path
-- **Primary Route**: `GET /`
-- **User Experience**: ブラウザで `/` にアクセスすると、ゲームタイトル画面と開始ボタンが表示される。クリックするとゲームキャンバスが描画され、操作可能になる。
-- **Health Endpoint**: `GET /health` (JSON: `{"status":"ok"}`)
+## Primary route
 
-## 2. Frontend Layout & Entrypoint
-- **Directory**: `client/`
-- **Entrypoint**: `client/index.html`
-- **Required Local Assets**:
-  - `client/style.css` (ゲームUI、キャンバス、メニューのスタイリング)
-  - `client/game.js` (Canvas APIを使用したゲームループ、重力井戸メカニクス、入力処理、スコア管理)
-- **Served Paths**: `/` は `client/index.html` を返し、`/assets/` は `client/` 配下の静的ファイルを提供する。
+- `/` serves the primary browser experience.
+- `/healthz` returns a JSON health response.
 
-## 3. Backend Module Path & Entrypoint
-- **Module Path**: `github.com/hakobune8/arun-test`
-- **Entrypoint**: `server/main.go`
-- **Served Routes**:
-  - `GET /` -> `client/index.html` を Content-Type `text/html` で提供
-  - `GET /health` -> JSON 200 OK
-  - `GET /assets/*` -> `client/` 配下のファイルを提供
-- **Architecture Note**: 小さな vertical slice では `server/main.go` にハンドラと静的ファイル提供をまとめるが、ドメインロジックは将来 `server/internal/` に分離可能にする。
+## Frontend
 
-## 4. Docker / Helm Packaging Expectations
-- **Dockerfile**: ルート直下に配置。Go ビルドステージと静的ファイル提供を行う。
-- **Helm Chart**: `charts/arun-test/` 配下に配置。
-  - `Chart.yaml`, `values.yaml`, `templates/deployment.yaml`, `templates/service.yaml`
-  - Service, Deployment, selectors, labels, probes, resource defaults を含む。
-  - Ingress は含まない。
-  - 孤立した断片 (`charts/values.yaml` など) を残さない。
+- Directory: `client/`.
+- Package file: `client/package.json`.
+- Entrypoint: `client/index.html`.
+- Required local assets: `client/styles.css` and `client/src/main.js`.
+- HTML must not reference local CSS or JavaScript files that are absent from the repository.
 
-## 5. Validation Commands
-- **Local Build & Run**:
-  ```bash
-  go build -o bin/server ./server/
-  ./bin/server
-  ```
-- **Smoke Test**:
-  ```bash
-  curl -s http://localhost:8080/health | jq .
-  curl -s http://localhost:8080/ | head -n 5
-  ```
-- **Tests**:
-  ```bash
-  go test ./...
-  ```
-- **Helm Lint & Template**:
-  ```bash
-  helm lint charts/arun-test/
-  helm template arun-test charts/arun-test/ | kubectl apply --dry-run=client -f -
-  ```
+## Backend
 
-## 6. File Change Summary
-- `docs/product-brief.md` (新規)
-- `docs/artifact-contract.md` (新規)
-- `server/main.go` (新規)
-- `client/index.html`, `client/style.css`, `client/game.js` (新規)
-- `Dockerfile` (新規)
-- `charts/arun-test/Chart.yaml`, `values.yaml`, `templates/*.yaml` (新規)
-- `README.md` (新規)
-- `.github/workflows/ci.yml` (新規)
+- Language: Go.
+- Module path: `github.com/hakobune8/arun-test/server`.
+- Module file: `server/go.mod`.
+- Entrypoint: `server/main.go`.
+- The Go server must serve `/` from `client/index.html` and must serve every local CSS or JavaScript file referenced by that HTML.
+
+## Deployment
+
+- Docker and Kubernetes artifacts must package the same backend and frontend paths defined above.
+- Helm chart templates must expose the application service and health checks without introducing a separate product path.
+
+## Validation
+
+- `cd server && go test ./...` passes when Go tooling is available.
+- `cd server && go vet ./...` passes when Go tooling is available.
+- Frontend smoke validation confirms `/` returns HTML and that referenced local CSS/JS assets exist and are served.
+- QA must treat any mismatch between this contract and repository artifacts as release-blocking.
