@@ -1,18 +1,17 @@
-# syntax=docker/dockerfile:1
-
-# Build Go server
-FROM golang:1.22-alpine AS server-builder
-WORKDIR /app
-COPY server/go.mod server/go.sum ./
+FROM golang:1.22-alpine AS build
+WORKDIR /src/server
+COPY server/go.mod ./
 RUN go mod download
 COPY server/ ./
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /server ./...
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/app .
 
-# Final runtime image
 FROM alpine:3.20
-RUN apk --no-cache add ca-certificates
+RUN addgroup -S app && adduser -S app -G app
 WORKDIR /app
-COPY --from=server-builder /server /app/server
-COPY client/ /app/client/
+COPY --from=build /out/app /app/app
+COPY client /app/client
+
+USER app
 EXPOSE 8080
-CMD ["/app/server"]
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 CMD wget -qO- http://127.0.0.1:8080/healthz || exit 1
+ENTRYPOINT ["/app/app"]
