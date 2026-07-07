@@ -1,0 +1,43 @@
+# Build outputs
+server/server
+dist/
+
+# Temporary files
+tmp/
+
+# Node modules
+node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Coverage
+coverage.out
+cover.html
+
+# Helm
+*.tgz
+
+# Docker
+.docker/
+
+# Logs
+*.log
+logs/
