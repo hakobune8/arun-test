@@ -1,24 +1,45 @@
-# Product Brief: One-Button Invaders
+# Product Brief: Neon Invaders
 
 ## Concept
+**Neon Invaders** — レトロなインベーダーゲームに「フェイズシフト」 mechanic を加えた、シンプルかつ戦略的なアーケード体験。
 
-One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+プレイヤーは自機を操作して敵インベーダーを撃破する。従来のインベーダーゲームとの差別化要素は、**フェイズシフト**（次元転移） mechanic である。プレイヤーはスペースキーを押すことで、敵の弾が通らない「ネオン次元」に一時的に遷移できる。この次元では敵も弾を発射しないが、自機の移動速度が低下する。戦略的にフェイズシフトを使い分けることで、より高度なプレイが可能になる。
 
 ## Target User
+- レトロゲームを好むカジュアルゲーマー
+- シンプルな操作で楽しめるゲームを求めているユーザー
+- 短時間で遊べるアーケード体験を好むユーザー
 
-- Players who want a short arcade loop with one clear twist.
-- Reviewers who need a fresh-checkout slice that runs without external services.
+## Core Loop
+1. プレイヤーが自機を左右に移動
+2. 敵インベーダーが下方向に移動しながら弾を発射
+3. プレイヤーは弾を回避しつつ敵を撃破
+4. フェイズシフトで敵の弾を回避し、自機の位置を調整
+5. 全敵撃破で次のステージへ
+6. 自機のライフが0になるとゲームオーバー
+
+## Differentiating Behavior
+- **フェイズシフト mechanic**: スペースキーで敵の弾が通らない次元へ遷移。遷移中は移動速度が低下するが、敵も弾を発射しない。この trade-off が戦略的なプレイを生む。
+- **ネオン aesthetic**: 黒背景にネオンカラーのグラフィックス。レトロ感とモダンな視覚効果の融合。
+- **シンプル操作**: 矢印キーで移動、スペースキーで発射、Shiftキーでフェイズシフト。3つのキーで完結。
 
 ## Acceptance Criteria
-
-- The visible title, README H1, and this product brief use the same product name.
-- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
-- Space changes the gravity lane between Floor and Ceiling.
-- A score is awarded only when the defender is aligned with the invader and on the same lane.
-- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
+| 要求 | Observable Criteria |
+|------|---------------------|
+| 新規性 | フェイズシフト mechanic が実装され、敵の弾を回避できる |
+| 楽しい | ゲームオーバーまでプレイ可能で、スコアシステムがある |
+| ポップ | ネオンカラーのグラフィックスが適用されている |
+| シンプル | 3つのキー操作でプレイ可能 |
+| Production-ready | Docker でビルド可能、Kubernetes でデプロイ可能 |
 
 ## Non-Goals
+- マルチプレイヤー機能
+- 外部サービス連携（スコア保存など）
+- モバイル対応
+- 複雑なストーリーやキャラクター設定
 
-- Multiplayer.
-- External score services.
-- Complex level progression.
+## QA Validation
+- フェイズシフト mechanic が正しく動作すること（敵の弾が通らない、移動速度が低下する）
+- ゲームオーバー条件が正しく判定されること
+- スコアシステムが正しく動作すること
+- Docker ビルドと Kubernetes デプロイが成功すること
