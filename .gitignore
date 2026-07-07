@@ -1,67 +1,53 @@
-# Binaries and build outputs
+# Binaries for server and client
 server/server
-server/*.exe
 dist/
-tmp/
-*.exe
 
-# Go build cache and artifacts
-*.exe
-*.test
-*.out
-*.a
-*.so
+# Node modules (if client uses npm/yarn)
+client/node_modules/
 
-# Node modules (if frontend build tools are used)
-node_modules/
+# Build artifacts
+*.exe
+*.exe~
+dll/*
+obj/
 
 # IDE and editor files
-.vscode/
 .idea/
+.vscode/
 *.swp
 *.swo
 *~
 
-# OS-specific files
+# OS files
 .DS_Store
 Thumbs.db
 
-# Local configuration and secrets
+# Local environment and secrets
 .env
 .env.local
 .env.*.local
-*.secret
-
-# Build and dist directories
-dist/
-build/
-out/
 
 # Logs
 *.log
 logs/
 
-# Coverage and test reports
-coverage.out
-test.out
-*.html
-
-# Helm chart local overrides
-charts/*/values.local.yaml
-
-# Docker build cache
-.docker/
-
 # Temporary files
+tmp/
 *.tmp
-*.bak
-*.swp
 
-# ARUN workspace artifacts (if any)
-.arun/
+# Test coverage reports
+coverage.out
+cover.html
+
+# Go build cache
+go/bin/
+
+# Helm build artifacts
+charts/*/charts/
+charts/*/templates/*.tpl
 
 # Local build and ARUN run artifacts
-client/node_modules/
+node_modules/
 client/dist/
 run.log
 run_state.json
