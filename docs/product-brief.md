@@ -1,45 +1,24 @@
-# Product/Design Brief: Neon Orbit Invaders
+# Product Brief: One-Button Invaders
 
-## 1. Product Concept
-**Neon Orbit Invaders** is a modern twist on the classic arcade shooter. Instead of linear side-to-side movement, enemies orbit a central planetary core. The player controls a ship that can rotate 360 degrees to aim and fire. The core novelty lies in **Orbital Timing**: enemies have a "vulnerable window" as they pass a specific point in their orbit. Hitting them during this window deals critical damage, rewarding precision over spam.
+## Concept
 
-## 2. Target User
-- Casual arcade gamers who enjoy retro aesthetics but want fresh mechanics.
-- Players looking for a quick, satisfying loop with clear visual feedback.
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
-## 3. Core Loop / Workflow
-1. **Spawn**: Enemies spawn and begin orbiting the central core at varying speeds and radii.
-2. **Aim & Fire**: Player moves the ship and rotates the barrel to aim. Fires projectiles.
-3. **Orbital Timing**: Player tracks enemy orbits and fires during the "vulnerable window" for instant destruction.
-4. **Feedback**: Visual "crunch" effect and score update on hit. Misses require re-engaging.
-5. **Progression**: Wave completion increases enemy count and orbital complexity.
+## Target User
 
-## 4. Differentiating Behavior
-- **Orbital Movement**: Enemies follow circular/elliptical paths, not linear grids.
-- **360-Degree Aiming**: Player ship rotates to aim, not just move left/right.
-- **Vulnerable Window**: Visual indicator (e.g., color shift or glow) shows when an enemy is vulnerable, adding a rhythm/timing layer.
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
-## 5. Non-Goals
-- Multiplayer or online leaderboards (Sprint 1).
-- Complex power-ups or inventory systems (Sprint 1).
-- Persistent user accounts or cloud saves (Sprint 1).
-- Mobile touch controls (Sprint 1 focuses on keyboard/mouse).
+## Acceptance Criteria
 
-## 6. Acceptance Criteria
-- [ ] Game renders in browser with 60 FPS target.
-- [ ] Enemies orbit a central core with visible vulnerable windows.
-- [ ] Player can aim 360 degrees and fire projectiles.
-- [ ] Hitting an enemy during the vulnerable window destroys it instantly.
-- [ ] Score updates in real-time.
-- [ ] Health endpoint returns 200 OK.
-- [ ] Docker image builds successfully.
-- [ ] Helm chart deploys to Kubernetes without errors.
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
 
-## 7. Qualitative Requirements → Observable Criteria
-| Requirement | Observable Criteria |
-|-------------|---------------------|
-| **Novelty** | Enemies move in orbits, not linear paths. Aiming is 360-degree, not fixed upward. |
-| **Fun** | Satisfying visual feedback on hit (particle effect). Increasing difficulty curve. |
-| **Pop** | High-contrast neon colors on dark background. Simple geometric shapes. |
-| **Simple** | One action to shoot. Clear vulnerable window indicator. |
-| **Production-Ready** | Health endpoint, Dockerfile, Helm chart, CI pipeline, structured logs. |
+## Non-Goals
+
+- Multiplayer.
+- External score services.
+- Complex level progression.
