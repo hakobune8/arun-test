@@ -1,3 +1,3 @@
-module github.com/hakobune8/arun-test/server
+module arun-test/server
 
-go 1.22
+go 1.21
