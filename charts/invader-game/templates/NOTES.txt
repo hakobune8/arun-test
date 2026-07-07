@@ -1,0 +1,25 @@
+Thank you for installing {{ .Chart.Name }}!
+
+{{- if eq .Values.service.type "ClusterIP" }}
+Your game is now running in your cluster. To access it locally, run:
+
+  kubectl port-forward svc/{{ include "invader-game.fullname" . }} {{ .Values.service.port }}:{{ .Values.service.port }}
+
+Then open your browser to: http://localhost:{{ .Values.service.port }}
+
+{{- else if eq .Values.service.type "NodePort" }}
+Your game is accessible via NodePort. Find the external port with:
+
+  kubectl get svc {{ include "invader-game.fullname" . }} --namespace {{ .Release.Namespace }} --output jsonpath="{.spec.ports[0].nodePort}"
+
+Then access at: http://<NODE-IP>:<NODE_PORT>
+
+{{- end }}
+
+Operational Notes:
+- Health check endpoint: /health
+- Resource limits are configurable via values.yaml (resources.limits)
+- Liveness and readiness probes are enabled by default
+- To view pod logs: kubectl logs -l app.kubernetes.io/name={{ include "invader-game.name" . }} --namespace {{ .Release.Namespace }}
+
+For detailed operations guide, see docs/operations.md
