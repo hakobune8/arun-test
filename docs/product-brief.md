@@ -1,24 +1,105 @@
-# Product Brief: Arun Test
+# Product Brief: Orbit Breaker
 
-## Concept
+## 概要
 
-Arun Test is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+**Orbit Breaker** は、インベーダーゲームの古典的な構造を「軌道運動」というメカニクスで再構築した、シンプルかつ新規性のあるブラウザゲームです。プレイヤーは画面下部の自機から弾を発射し、中央の中心点を周回するインベーダーを「脆弱ポイント（最接近点）」で撃破します。
 
-## Target User
+## 対象ユーザー
 
-- Players who want a short arcade loop with one clear twist.
-- Reviewers who need a fresh-checkout slice that runs without external services.
+- 5〜15分の短いプレイセッションを好むカジュアルゲーマー
+- シンプルなルールで深い戦略性を楽しみたいプレイヤー
+- ブラウザで即座に遊べるゲームを求めるユーザー
 
-## Acceptance Criteria
+## コアループ
 
-- The visible title, README H1, and this product brief use the same product name.
-- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
-- Space changes the gravity lane between Floor and Ceiling.
-- A score is awarded only when the defender is aligned with the invader and on the same lane.
-- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
+1. **観測**: インベーダーの軌道パターンを読み、脆弱ポイント（中心に最も接近する位置）を予測
+2. **射撃**: 自機を移動し、弾を誘導してインベーダーを撃破
+3. **評価**: 軌道からの距離に応じてスコアが変動（中心に近いほど高スコア）
+4. **難易度上昇**: 軌道速度の増加、複数軌道の追加、インベーダーの増殖
+5. **リトライ**: ライフを失うたびに同じ軌道パターンから再挑戦
 
-## Non-Goals
+## 差別化メカニクス
 
-- Multiplayer.
-- External score services.
-- Complex level progression.
+### 軌道スコアリング
+
+インベーダーは直線的に下降するのではなく、中心点を周回する楕円軌道を描きます。プレイヤーはインベーダーが中心に最も接近する瞬間（脆弱ポイント）にのみ最大ダメージを与えられます。この設計により:
+
+- 単なる反射神経だけでなく、パターン読みの戦略性が要求される
+- 弾の誘導（バウンス）による高難度プレイが可能
+- 各インベーダーの「軌道位置」が視覚的に明確
+
+### 視覚的フィードバック
+
+- インベーダーは軌道上を移動する際、中心接近時に発光する
+- 弾は壁でバウンスし、軌道外からでも攻撃可能
+- 破壊時のパーティクルが軌道方向に飛散
+
+## 受入基準（Acceptance Criteria）
+
+### AC-1: 軌道運動
+
+- [ ] インベーダーは少なくとも1つの楕円軌道を描いて移動する
+- [ ] 軌道は画面中央を基準に計算される
+- [ ] 軌道速度はゲーム進行とともに段階的に増加する
+- [ ] 少なくとも3種類の軌道パターン（単一軌道、二重軌道、多重軌道）が存在する
+
+### AC-2: 脆弱ポイントシステム
+
+- [ ] インベーダーは中心からの距離に応じて可変ダメージを受ける
+- [ ] 中心に最も接近する位置（脆弱ポイント）でのみ最大ダメージ（1発で破壊）が可能
+- [ ] 脆弱ポイント付近での攻撃は視覚的に強調される（発光エフェクト）
+- [ ] 軌道外側での攻撃は最小ダメージ（複数発必要）
+
+### AC-3: 操作性
+
+- [ ] マウス/タッチで自機を水平移動可能
+- [ ] クリック/タップで弾を発射
+- [ ] 弾は画面左右の壁でバウンスする
+- [ ] レスポンシブ対応（デスクトップ・モバイル両対応）
+
+### AC-4: ゲームフロー
+
+- [ ] スタート画面からゲーム開始まで1クリック
+- [ ] ライフ3つのライフシステム
+- [ ] スコア表示とハイスコアのローカルストレージ保存
+- [ ] ゲームオーバー画面でスコア表示と再プレイ可能
+
+### AC-5: パフォーマンス
+
+- [ ] 60fpsの安定したフレームレート（デスクトップ）
+- [ ] モバイルでも30fps以上を維持
+- [ ] 初回ロード時間3秒以内
+
+## 非目標（Non-Goals）
+
+- マルチプレイヤー機能
+- サーバーサイドスコアランキング
+- 複雑なストーリーモード
+- 外部サービス連携（SNS共有など）
+- 音声効果（Sprint 1では実装しない）
+
+## 定性的要求のobservable変換
+
+| 定性的要求 | Observable Criteria | 検証方法 |
+|-----------|-------------------|----------|
+| 新規性 | 軌道スコアリングメカニクスが実装され、従来のインベーダーとは明確に異なる | ゲームプレイの記録と比較 |
+| 楽しい | 1プレイあたりの平均セッション時間が5分以上 | 計測データ |
+| ポップ | 破壊エフェクト、発光、パーティクルが視覚的に魅力的 | レビューによる確認 |
+| シンプル | ルール説明が3文以内で理解可能 | 新規ユーザーへのテスト |
+| production-ready | CIパス、Helmデプロイ可能、エラーハンドリング完备 | 自動化テスト |
+
+## Sprint 1 範囲
+
+- 最小限の軌道運動インベーダーゲーム（Canvas 2D）
+- 基本的な射撃・破壊・スコアリング
+- スタート画面・ゲームオーバー画面
+- `/` エンドポイントでゲームUIを提供
+- `/healthz` ヘルスチェックエンドポイント
+- ローカルでの実行とDockerビルド
+
+## 技術スタック
+
+- **Backend**: Go 1.21+（net/http）
+- **Frontend**: Vanilla JS + Canvas 2D（外部依存なし）
+- **パッケージング**: Docker + Helm
+- **CI**: GitHub Actions
