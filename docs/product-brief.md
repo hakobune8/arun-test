@@ -1,24 +1,43 @@
-# Product Brief: Product Brief Md
+# Product Brief: ポップインベーダー (Pop Invader)
 
 ## Concept
-
-Product Brief Md is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+ポップでシンプルなインベーダーゲーム。ブラウザで動作するミニマルなシューティングゲーム。
 
 ## Target User
+- ブラウザで手軽にプレイしたいカジュアルゲーマー
+- 短いプレイセッションを好むユーザー
 
-- Players who want a short arcade loop with one clear twist.
-- Reviewers who need a fresh-checkout slice that runs without external services.
+## Core Loop
+1. 画面下部の自機を左右に移動
+2. 画面上部の敵を弾で撃破
+3. 敵が画面下端に到達する前に全撃破すればクリア
+4. クリアごとに次のステージへ（敵の速度・配置が変化）
+
+## Differentiating Behavior
+- **ポップなビジュアル**: 明るいカラーパレット、シンプルな形状
+- **ミニマル操作**: 矢印キーまたはマウスで操作可能
+- **即座にプレイ可能**: 外部サービス不要、ブラウザで即起動
 
 ## Acceptance Criteria
-
-- The visible title, README H1, and this product brief use the same product name.
-- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
-- Space changes the gravity lane between Floor and Ceiling.
-- A score is awarded only when the defender is aligned with the invader and on the same lane.
-- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
+- [ ] ブラウザで `/` にアクセスするとゲーム画面が表示される
+- [ ] 自機が左右に移動可能
+- [ ] スペースキーで弾を発射可能
+- [ ] 敵が画面上部から下降し、自機に衝突するとゲームオーバー
+- [ ] 敵を全撃破すると次のステージへ
+- [ ] `/healthz` エンドポイントが 200 OK を返す
+- [ ] ゲームタイトルが画面に表示される
 
 ## Non-Goals
+- マルチプレイヤー機能
+- 外部スコアボード連携
+- 複雑なストーリーモード
+- モバイルタッチ操作（Sprint 1 では対象外）
 
-- Multiplayer.
-- External score services.
-- Complex level progression.
+## Qualitative → Observable Criteria
+| 定性要求 | 観測可能な基準 |
+|---------|--------------|
+| ポップ | 明るいカラーパレット（#FF6B6B, #4ECDC4, #FFE66D など） |
+| シンプル | 操作は矢印キー/マウス + スペースキーのみ |
+| 新規性 | マウスとキーボードの両方に対応したミニマルUI |
+| 楽しい | 敵撃破時のアニメーション、スコア表示 |
+| production-ready | Docker 化、Kubernetes 対応、ヘルスチェック |
