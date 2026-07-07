@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gravity Deflection — 重力で弾を跳ね返せ</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="header">
+      <h1 class="title">Gravity Deflection</h1>
+      <p class="subtitle">重力フィールドで弾を跳ね返せ</p>
+    </header>
+
+    <div id="game-container">
+      <canvas id="game-canvas" width="600" height="700"></canvas>
+      <div id="hud">
+        <span id="score">Score: 0</span>
+        <span id="lives">Lives: 3</span>
+        <span id="gravity-status">Gravity: OFF</span>
+      </div>
+    </div>
+
+    <div id="controls">
+      <p>← → で移動 | SPACE で重力フィールド ON/OFF</p>
+    </div>
+
+    <div id="overlay" class="hidden">
+      <div id="overlay-content">
+        <h2 id="overlay-title">Game Over</h2>
+        <p id="overlay-message">最終スコア: 0</p>
+        <button id="restart-btn">もう一度プレイ</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
