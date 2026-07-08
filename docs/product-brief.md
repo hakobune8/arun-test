@@ -1,66 +1,112 @@
+# Product Brief: GraviInvaders
+
+## Concept
+
+**GraviInvaders** — 古典的なインベーダーゲームに「重力操作」メカニクスを追加した、新規性のあるアーケードゲーム。
+
+プレイヤーは画面下部の宇宙船を操作し、画面上部の敵インベーダーを撃破する。従来のインベーダーゲームとの決定的な違いは、**プレイヤーが重力の源（ブラックホール）を画面内に配置できる**点にある。
+
+## Target User
+
+- アーケードゲームやレトロゲームを好むカジュアルゲーマー
+- シンプルな操作で深い戦略性を求めるプレイヤー
+- 30秒〜5分のプレイセッションを好むユーザー
+
+## Core Loop
+
+1. **敵の出現**: インベーダーが横方向に移動しながら下降
+2. **攻撃**: プレイヤーは弾を発射して敵を撃破
+3. **重力操作**: プレイヤーはスペースキーで重力の源を配置
+   - 重力の源は周囲の弾と敵を引き寄せる
+   - 敵を重力の源に引き寄せて自爆させる戦略が可能
+   - 敵の弾道を曲げて回避できる
+4. **連鎖反応**: 敵が重力の源に吸い込まれると爆発し、周囲の敵にもダメージ
+5. **難易度上昇**: 波が進むごとに敵の速度・弾数が増加
+
+## Differentiating Mechanic
+
+**Gravity Well (重力の源)**
+- プレイヤーはスペースキーを押すたびに、画面内の任意の位置に重力の源を配置
+- 重力の源は最大3つまで同時存在可能
+- 重力の源は5秒後に消滅
+- 重力の源は以下の効果を持つ:
+  - プレイヤーの弾を曲げて敵に当てる（曲射攻撃）
+  - 敵を吸い寄せて自爆させる
+  - 敵の弾を曲げて回避する
+
+**Observable Criteria (新規性の検証):**
+- 重力の源が敵の弾道を曲げることを視覚的に確認できる
+- 敵が重力の源に吸い込まれるアニメーションが存在する
+- 重力の源による連鎖反応がスコア加算に反映される
+
+## Acceptance Criteria
+
+### AC-1: 基本的なゲームプレイ
+- [ ] プレイヤーが左右に移動できる
+- [ ] プレイヤーが弾を発射できる
+- [ ] 敵が横方向に移動しながら下降する
+- [ ] 敵がプレイヤーに向けて弾を発射する
+- [ ] プレイヤーの弾が敵に当たると敵が破壊される
+- [ ] 敵の弾がプレイヤーに当たるとプレイヤーがダメージを受ける
+- [ ] プレイヤーのライフが0になるとゲームオーバー
+
+### AC-2: 重力メカニクス
+- [ ] プレイヤーがスペースキーで重力の源を配置できる
+- [ ] 重力の源は画面内の任意の位置に配置可能
+- [ ] 重力の源は最大3つまで同時存在可能
+- [ ] 重力の源は5秒後に消滅する
+- [ ] 重力の源は周囲の弾と敵を引き寄せる
+- [ ] 敵が重力の源に吸い込まれると自爆する
+- [ ] 重力の源による連鎖反応がスコア加算に反映される
+
+### AC-3: UI/UX
+- [ ] ゲームタイトル画面が表示される
+- [ ] スコアとライフが表示される
+- [ ] ゲームオーバー画面が表示される
+- [ ] リトライが可能
+- [ ] 操作説明が表示される
+
+### AC-4: 新規性
+- [ ] 重力の源が敵の弾道を曲げることを視覚的に確認できる
+- [ ] 敵が重力の源に吸い込まれるアニメーションが存在する
+- [ ] 重力の源による戦略的深度が従来のインベーダーゲームと明確に異なる
+
+## Non-Goals
+
+- マルチプレイヤー機能
+- ハイスコアの永続化（データベース使用）
+- 複雑なストーリーやキャラクター設定
+- モバイル対応（まずはブラウザゲームとして提供）
+- サウンドエフェクト（Sprint 1では省略可能）
+
+## Qualitative Requirements → Observable Criteria
+
+| 定性要求 | 観測可能な基準 |
+|---------|--------------|
+| 新規性 | 重力の源による弾道曲げ・敵の自爆メカニクスが存在する |
+| 楽しい | 連鎖反応によるスコア加算が頻繁に発生する |
+| ポップ | 重力の源の視覚効果（歪み・吸引アニメーション）が存在する |
+| シンプル | 操作は矢印キー（移動）+ Zキー（弾発射）+ スペースキー（重力配置）の3つ |
+| Production-ready | Dockerでビルド可能、Kubernetesでデプロイ可能、CIでテストが通る |
+
+## App Title
+
+**GraviInvaders** (グラビインベーダー)
+
+## Primary Served Path
+
+- `GET /` → ゲーム画面（HTML/CSS/JS）
+- `GET /health` → ヘルスチェックエンドポイント
+- `GET /assets/game.js` → ゲームロジック（JavaScript）
+- `GET /assets/style.css` → スタイルシート
+
+## Technology Stack
+
+- **Backend**: Go (net/http)
+- **Frontend**: Vanilla JavaScript + HTML5 Canvas
+- **Deployment**: Docker + Kubernetes (Helm)
+- **CI**: GitHub Actions
+
 ---
-title: "Gravity Shift Invaders - Product Brief"
-status: "active"
-sprint: 1
----
 
-# Gravity Shift Invaders
-
-## 1. Concept & Value Proposition
-
-**Gravity Shift Invaders** is a modern twist on the classic arcade shooter. 
-Instead of the traditional left-right movement, the player controls the **gravity** of their ship.
-
-*   **Novelty:** Vertical movement as the primary mechanic. The ship automatically moves forward (or the stage scrolls), and the player taps/clicks to flip gravity, making the ship fall to the bottom or float to the top.
-*   **Value:** A fresh, intuitive arcade experience that feels different from standard Invaders while retaining the satisfying "shoot and destroy" loop.
-*   **Target User:** Casual gamers, arcade enthusiasts, and users looking for a quick, high-score-chasing experience.
-
-## 2. Core Loop
-
-1.  **Start:** The game begins with the ship at the bottom.
-2.  **Input:** Player clicks/taps to flip gravity.
-    *   If at bottom, ship floats to top.
-    *   If at top, ship falls to bottom.
-3.  **Action:** The ship automatically fires bullets forward (or player presses space to fire, depending on implementation simplicity for Sprint 1).
-4.  **Feedback:** Enemies are destroyed, score increases, visual effects play.
-5.  **Progression:** Enemies spawn in waves. Difficulty increases over time.
-6.  **End:** Game over when the player's ship is hit by an enemy or enemy bullet.
-
-## 3. Differentiating Mechanics
-
-*   **Gravity Flip:** The core interaction. No left/right movement. This creates a unique "dodging" dynamic where players must anticipate enemy patterns vertically.
-*   **Auto-Fire:** To keep controls simple and focused on the gravity mechanic, the ship auto-fires continuously.
-
-## 4. Acceptance Criteria (Sprint 1)
-
-*   [ ] **AC-1: Gravity Control**
-    *   Given the game is running,
-    *   When the user clicks/taps,
-    *   Then the ship changes vertical direction (falls or floats).
-*   [ ] **AC-2: Auto-Fire**
-    *   Given the game is running,
-    *   Then the ship fires bullets automatically at a set interval.
-*   [ ] **AC-3: Enemy Movement**
-    *   Given enemies are spawned,
-    *   Then they move in a recognizable pattern (e.g., straight down or sine wave).
-*   [ ] **AC-4: Collision Detection**
-    *   Given a bullet hits an enemy,
-    *   Then the enemy is removed and score increases.
-    *   Given an enemy hits the player,
-    *   Then the game ends (or player loses a life).
-*   [ ] **AC-5: UI Feedback**
-    *   The current score is displayed.
-    *   The game state (Playing, Game Over) is clearly visible.
-
-## 5. Non-Goals (Sprint 1)
-
-*   Multiplayer support.
-*   Complex power-ups (beyond basic shooting).
-*   Persistent high scores (local storage only if easy, otherwise in-memory).
-*   Mobile-specific touch gestures (swipe, etc.) - simple tap/click is sufficient for MVP.
-
-## 6. Technical Constraints
-
-*   **Frontend:** Vanilla HTML5 Canvas + JavaScript (no heavy frameworks for Sprint 1).
-*   **Backend:** Go HTTP server serving static assets and handling health checks.
-*   **Deployment:** Dockerized, deployable via Helm/K8s.
+*This brief is the single source of truth for the GraviInvaders product. All implementation, documentation, and validation activities must align with this concept.*
