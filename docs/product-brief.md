@@ -1,24 +1,41 @@
-# Product Brief: Arun Test
+# Product Brief: Orbit Invader
 
 ## Concept
-
-Arun Test is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+**Orbit Invader** — 惑星を周回する敵を撃ち落とす、回転する宇宙空間でのインベーダーゲーム。
 
 ## Target User
+- シンプルなアーケードゲームを好むカジュアルゲーマー
+- 既存のインベーダーゲームに飽きた経験者
+- 5〜10分のプレイセッションを求めるユーザー
 
-- Players who want a short arcade loop with one clear twist.
-- Reviewers who need a fresh-checkout slice that runs without external services.
+## Core Loop
+1. 惑星を中心に敵が楕円軌道で周回する
+2. プレイヤーは惑星の底部から弾を発射
+3. 敵を撃ち落とすとスコア加算、全滅で次のウェーブ
+4. ウェーブ間で武器アップグレードを選択可能
+
+## Differentiating Mechanic
+**Orbital Trajectory System**: 敵は直線的ではなく楕円軌道で移動。軌道の傾き・速度・半径がウェーブごとに変化し、予測不可能な攻撃パターンを生成する。
 
 ## Acceptance Criteria
-
-- The visible title, README H1, and this product brief use the same product name.
-- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
-- Space changes the gravity lane between Floor and Ceiling.
-- A score is awarded only when the defender is aligned with the invader and on the same lane.
-- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
+- [ ] 惑星を中央に配置したゲーム画面がレンダリングされる
+- [ ] 敵が楕円軌道で移動する（直線移動ではない）
+- [ ] プレイヤーが弾を発射し、敵を撃ち落とせる
+- [ ] スコア表示とウェーブ進行が機能する
+- [ ] 5秒以内に初回プレイ可能
+- [ ] レスポンシブ対応（デスクトップ・モバイル）
 
 ## Non-Goals
+- マルチプレイヤー
+- 高スコアランキング（ローカルのみ）
+- 複雑なストーリーモード
+- サウンドエフェクト（Sprint 1では省略）
 
-- Multiplayer.
-- External score services.
-- Complex level progression.
+## Qualitative → Observable Criteria
+| 定性要求 | 観測可能な基準 |
+|---------|--------------|
+| 新規性 | 敵が直線ではなく楕円軌道で移動 |
+| 楽しい | 5分以上のプレイセッションが自然に発生 |
+| ポップ | 鮮やかな色彩、アニメーション付き |
+| シンプル | 操作は矢印キー＋スペースのみ |
+| production-ready | /healthz 応答、エラーハンドリング、CI通過 |

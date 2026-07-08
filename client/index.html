@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orbit Invader - 軌道インベーダー</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="gameCanvas"></canvas>
+    <div id="ui-overlay">
+      <div id="hud">
+        <div id="score">Score: 0</div>
+        <div id="lives">Lives: ♥♥♥</div>
+        <div id="level">Level: 1</div>
+      </div>
+      <div id="start-screen" class="screen">
+        <h1>Orbit Invader</h1>
+        <h2>軌道インベーダー</h2>
+        <p class="instructions">
+          ← → で軌道を移動 | SPACE で発射
+        </p>
+        <button id="start-btn">START GAME</button>
+      </div>
+      <div id="game-over-screen" class="screen hidden">
+        <h1>GAME OVER</h1>
+        <p id="final-score">Final Score: 0</p>
+        <button id="restart-btn">PLAY AGAIN</button>
+      </div>
+      <div id="pause-screen" class="screen hidden">
+        <h1>PAUSED</h1>
+        <button id="resume-btn">RESUME</button>
+      </div>
+    </div>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

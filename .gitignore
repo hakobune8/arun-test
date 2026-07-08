@@ -32,3 +32,10 @@ charts/*/templates/*.yaml
 
 # Logs
 *.log
+
+# Local build and ARUN run artifacts
+client/node_modules/
+client/dist/
+run.log
+run_state.json
+tool_log.jsonl
