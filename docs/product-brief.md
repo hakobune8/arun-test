@@ -1,52 +1,24 @@
-# Color Ring - ゲーム設計書
+# Product Brief: Arun Test
 
-## コンセプト
+## Concept
 
-**Color Ring** は、回転するリングの色をマッチングするパズルゲームです。プレイヤーはリングを回転させて、同じ色のセグメントを揃えることでスコアを獲得します。
+Arun Test is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
-## 対象ユーザー
+## Target User
 
-- 短い時間で遊べるカジュアルゲームを好むユーザー
-- ビジュアル的に魅力的なゲームを好むユーザー
-- 1-3 分のプレイセッションを好むユーザー
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
-## コアループ
+## Acceptance Criteria
 
-1. ランダムに生成されたリングが表示される
-2. プレイヤーはマウス/タッチでリングを回転させる
-3. 同じ色のセグメントが揃うとスコア加算
-4. 制限時間内にできるだけ多くのスコアを獲得
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
 
-## 差別化ポイント
+## Non-Goals
 
-- **回転マッチング**: スライドやスワイプではなく、回転操作が核心
-- **ミニマル UI**: 色と形状のみで情報を伝える
-- **即座に開始**: 説明不要で直感的にプレイ可能
-
-## 受け入れ基準 (Acceptance Criteria)
-
-| 番号 | 基準 | 検証方法 |
-|------|------|----------|
-| AC-1 | `/` でゲーム画面が表示される | ブラウザでアクセスし、Canvas が描画される |
-| AC-2 | `/healthz` で 200 OK が返る | curl でステータスコードを確認 |
-| AC-3 | リングが回転操作で反応する | マウスドラッグでリングが回転する |
-| AC-4 | 色のマッチングでスコアが加算される | 同じ色のセグメントが揃うとスコア表示が更新 |
-| AC-5 | Docker コンテナで起動可能 | `docker build` & `docker run` で起動確認 |
-| AC-6 | Helm chart でデプロイ可能 | `helm template` でマニフェスト生成確認 |
-
-## ノンゴールズ
-
-- 複数プレイヤー対応
-- 外部 API 連携
-- 複雑なストーリーモード
-- モバイルネイティブアプリ
-
-## 定性的要求の観測可能基準
-
-| 要求 | 観測可能基準 |
-|------|-------------|
-| 新規性 | 回転マッチングという独自 mechanic を実装 |
-| 楽しい | スコア加算のフィードバックが即座に視覚的に返る |
-| ポップ | 鮮やかな色使い、クリーンなタイポグラフィ |
-| シンプル | 操作は回転のみ、UI は最小限 |
-| production-ready | テスト、CI、デプロイメントが完備 |
+- Multiplayer.
+- External score services.
+- Complex level progression.

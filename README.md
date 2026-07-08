@@ -1,61 +1,34 @@
-# RhythmType
+# Arun Test
 
-**リズムに合わせて打鍵する、フロー状態を重視したタイピングゲーム**
+This repository started empty. ARUN generated a minimal static browser game with a gravity-lane mechanic so an implementation-heavy scrum workflow can produce reviewable code, documentation, and validation artifacts without GitHub API calls.
 
-このリポジトリは、「新規性のあるゲーム」をテーマに、最小限の垂直スライス（Vertical Slice）として実装されたプロトタイプです。
-複雑なシステムではなく、ユーザー体験（UX）の核となる「打鍵のリズムと視覚的フィードバックの同期」に焦点を当てています。
+## Repository layout
 
-## 🎮 プロダクトコンセプト
+- `server/` contains the Go HTTP entrypoint.
+- `client/` contains the browser UI served from `/`.
+- `charts/` and `k8s/` contain deployment artifacts when present.
+- `docs/` contains product and validation notes.
 
-詳細な製品要件は [docs/product-brief.md](docs/product-brief.md) を参照してください。
+## Features
 
-- **対象ユーザー**: 単調な練習ではなく、ゲームとしての「楽しさ」と「没入感」を求めているタイピング愛好者。
-- **コアループ**: 表示された単語をリズムに合わせて打鍵する → リズムの安定度に応じて背景やビジュアルが変化する → 次の単語へ。
-- **差別化要素（Differentiating Mechanic）**: 「フロー状態」の可視化。正確さだけでなく、打鍵の「間（リズム）」を重視し、ユーザーのペースに合わせて画面が呼吸するように変化します。
+- Keyboard controls with ArrowLeft, ArrowRight, and Space.
+- Space flips the defender between floor and ceiling gravity lanes.
+- Score display that increments only when the defender is horizontally aligned and on the same gravity lane as the invader.
+- Lives tracking that decrements when an invader reaches the bottom of the arena.
+- Restart behavior that resets score, lives, player position, and invader position.
 
-## 🚀 ローカルでの実行方法
+## Run
 
-このプロジェクトは Go (Backend) と静的な Web アセット (Frontend) で構成されています。
+Run the Go server with `cd server && go run .` and open `http://127.0.0.1:8080/`, or open `client/index.html` directly for a static browser review.
 
-1. **リポジトリのクローン**
-   ```bash
-   git clone <repository-url>
-   cd arun-test
-   ```
+## Validate
 
-2. **Backend の起動**
-   ```bash
-   cd server
-   go mod download
-   go run main.go
-   ```
-   サーバーはデフォルトで `http://localhost:8080` で起動します。
+```sh
+cd server && go test ./...
+cd server && go vet ./...
+npm --prefix client test
+npm --prefix client run build
+for chart in charts/*; do [ -f "$chart/Chart.yaml" ] && helm lint "$chart" && helm template arun-validation "$chart" >/tmp/arun-validation.yaml; done
+```
 
-3. **Frontend の確認**
-   ブラウザで `http://localhost:8080` にアクセスすると、ゲーム画面が表示されます。
-   （※ 開発中は `client/` ディレクトリ内のアセットが Go サーバーによって提供されます）
-
-## 📂 リポジトリ構成
-
-関心を分離し、レビューしやすい構成にしています。
-
-- `server/`: Go 製の HTTP サーバーとバックエンドロジック
-- `client/`: ブラウザで動作するフロントエンドアセット（HTML/CSS/JS）
-- `docs/`: 製品要件（Product Brief）と実装契約（Artifact Contract）
-- `charts/`: Kubernetes 向け Helm チャート
-- `README.md`: このファイル（プロジェクトの入口）
-
-## 📝 ドキュメント
-
-- **[製品要件 (Product Brief)](docs/product-brief.md)**: ターゲットユーザー、コアループ、差別化要素、非目標、受入基準を定義しています。
-- **[実装契約 (Artifact Contract)](docs/artifact-contract.md)**: ルート、ファイル配置、バリデーションコマンドなど、実装と検証の基準を定義しています。
-
-## ✅ 受入基準（Sprint 1）
-
-- [x] `http://localhost:8080` でゲーム画面が表示される
-- [x] 打鍵操作に対して視覚的フィードバック（リズムバーの変化）がリアルタイムで発生する
-- [x] Dockerfile と Helm Chart が存在し、コンテナ化とデプロイが可能である
-- [x] CI パイプラインがビルドとテストを実行する
-
----
-*このプロジェクトは、アジャイルスクラムワークフローに基づき、反復的に改善されます。*
+The client scripts use `node --check` from `client/package.json` and do not require package installation. Run the Helm commands after the chart is present.
