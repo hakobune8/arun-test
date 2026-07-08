@@ -1,14 +1,19 @@
 # Binaries
-server/server
-server/*.exe
+server
+client/dist/
 
 # Build outputs
-dist/
 tmp/
-out/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
 
-# Node.js
-node_modules/
+# Dependency directories
+vendor/
 
 # IDE
 .idea/
@@ -20,14 +25,14 @@ node_modules/
 .DS_Store
 Thumbs.db
 
-# Go
-*.exe
-*.~
-go.sum
+# Helm
+charts/gravity-invaders/.helmignore
 
 # Local build and ARUN run artifacts
+server/server
+dist/
+node_modules/
 client/node_modules/
-client/dist/
 run.log
 run_state.json
 tool_log.jsonl
