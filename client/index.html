@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Rush - 色の速読ゲーム</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Color Rush</h1>
+      <p class="subtitle">表示された色に素早く反応しよう！</p>
+    </header>
+
+    <div id="game-area">
+      <div id="score-board">
+        <span>スコア: <span id="score">0</span></span>
+        <span>残り時間: <span id="timer">30</span>秒</span>
+      </div>
+
+      <div id="game-content">
+        <div id="instruction">準備ができたら「スタート」をクリック</div>
+        <div id="word-display" class="hidden"></div>
+        <div id="options" class="hidden"></div>
+      </div>
+
+      <button id="start-btn" class="btn-primary">スタート</button>
+      <div id="result" class="hidden">
+        <h2>ゲーム終了！</h2>
+        <p>スコア: <span id="final-score">0</span></p>
+        <button id="restart-btn" class="btn-primary">もう一度プレイ</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
