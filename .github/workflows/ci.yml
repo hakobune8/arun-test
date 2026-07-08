@@ -7,7 +7,8 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,27 +19,53 @@ jobs:
         with:
           go-version: '1.22'
           cache: true
-          cache-dependency-path: server/go.sum
 
       - name: Download dependencies
         run: |
           cd server
           go mod download
 
-      - name: Run linter
-        run: |
-          cd server
-          go vet ./...
-          if command -v golangci-lint &> /dev/null; then
-            golangci-lint run ./...
-          else
-            echo "golangci-lint not installed, skipping"
-          fi
-
       - name: Run tests
         run: |
           cd server
           go test -v -race -coverprofile=coverage.out ./...
+
+      - name: Upload coverage
+        run: |
+          cd server
+          go tool cover -func=coverage.out
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache: true
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v4
+        with:
+          working-directory: server
+          version: v1.55
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache: true
 
       - name: Build server
         run: |
@@ -47,47 +74,12 @@ jobs:
 
       - name: Validate Dockerfile
         run: |
-          if [ -f Dockerfile ]; then
-            docker build -t arun-test:ci . || echo "Docker build skipped (no Docker daemon)"
-          else
-            echo "No Dockerfile found, skipping Docker validation"
-          fi
+          docker build -t arun-test:ci .
 
-  helm-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Helm
-        uses: azure/setup-helm@v4
-        with:
-          version: 'v3.14.0'
-
-      - name: Run Helm lint
+      - name: Validate Helm chart
         run: |
-          if [ -d charts ]; then
-            helm lint charts/ || echo "Helm lint failed"
-          else
-            echo "No charts directory found, skipping Helm validation"
-          fi
+          helm lint charts/arun-test
 
-  frontend-validation:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Validate frontend assets
+      - name: Clean up
         run: |
-          if [ -d client ]; then
-            echo "Checking frontend directory structure..."
-            if [ -f client/index.html ]; then
-              echo "✓ index.html found"
-            else
-              echo "✗ index.html not found"
-              exit 1
-            fi
-          else
-            echo "No client directory found, skipping frontend validation"
-          fi
+          rm -f server/server
