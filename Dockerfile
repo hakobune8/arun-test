@@ -1,31 +1,17 @@
-# Build stage
-FROM golang:1.21-alpine AS builder
-
-WORKDIR /app
-
-# Install dependencies
-COPY go.mod go.sum ./
+FROM golang:1.22-alpine AS build
+WORKDIR /src/server
+COPY server/go.mod ./
 RUN go mod download
+COPY server/ ./
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/app .
 
-# Copy source
-COPY . .
-
-# Build
-RUN CGO_ENABLED=0 GOOS=linux go build -o /server ./server
-
-# Final stage
-FROM alpine:latest
-
+FROM alpine:3.20
+RUN addgroup -S app && adduser -S app -G app
 WORKDIR /app
+COPY --from=build /out/app /app/app
+COPY client /app/client
 
-# Copy binary
-COPY --from=builder /server /app/server
-
-# Copy frontend assets (assuming they are in client/ and served by Go)
-COPY client/ /app/client/
-
-# Expose port
+USER app
 EXPOSE 8080
-
-# Run
-CMD ["/app/server"]
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 CMD wget -qO- http://127.0.0.1:8080/healthz || exit 1
+ENTRYPOINT ["/app/app"]
