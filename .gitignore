@@ -1,0 +1,43 @@
+# Build outputs
+server/server
+dist/
+tmp/
+
+# Node.js
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.sum
+
+# Docker
+.docker/
+
+# Helm
+*.tgz
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.*
+!.env.example
