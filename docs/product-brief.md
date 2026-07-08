@@ -1,112 +1,24 @@
-# Product Brief: GraviInvaders
+# Product Brief: One-Button Invaders
 
 ## Concept
 
-**GraviInvaders** — 古典的なインベーダーゲームに「重力操作」メカニクスを追加した、新規性のあるアーケードゲーム。
-
-プレイヤーは画面下部の宇宙船を操作し、画面上部の敵インベーダーを撃破する。従来のインベーダーゲームとの決定的な違いは、**プレイヤーが重力の源（ブラックホール）を画面内に配置できる**点にある。
+One-Button Invaders is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
 
 ## Target User
 
-- アーケードゲームやレトロゲームを好むカジュアルゲーマー
-- シンプルな操作で深い戦略性を求めるプレイヤー
-- 30秒〜5分のプレイセッションを好むユーザー
-
-## Core Loop
-
-1. **敵の出現**: インベーダーが横方向に移動しながら下降
-2. **攻撃**: プレイヤーは弾を発射して敵を撃破
-3. **重力操作**: プレイヤーはスペースキーで重力の源を配置
-   - 重力の源は周囲の弾と敵を引き寄せる
-   - 敵を重力の源に引き寄せて自爆させる戦略が可能
-   - 敵の弾道を曲げて回避できる
-4. **連鎖反応**: 敵が重力の源に吸い込まれると爆発し、周囲の敵にもダメージ
-5. **難易度上昇**: 波が進むごとに敵の速度・弾数が増加
-
-## Differentiating Mechanic
-
-**Gravity Well (重力の源)**
-- プレイヤーはスペースキーを押すたびに、画面内の任意の位置に重力の源を配置
-- 重力の源は最大3つまで同時存在可能
-- 重力の源は5秒後に消滅
-- 重力の源は以下の効果を持つ:
-  - プレイヤーの弾を曲げて敵に当てる（曲射攻撃）
-  - 敵を吸い寄せて自爆させる
-  - 敵の弾を曲げて回避する
-
-**Observable Criteria (新規性の検証):**
-- 重力の源が敵の弾道を曲げることを視覚的に確認できる
-- 敵が重力の源に吸い込まれるアニメーションが存在する
-- 重力の源による連鎖反応がスコア加算に反映される
+- Players who want a short arcade loop with one clear twist.
+- Reviewers who need a fresh-checkout slice that runs without external services.
 
 ## Acceptance Criteria
 
-### AC-1: 基本的なゲームプレイ
-- [ ] プレイヤーが左右に移動できる
-- [ ] プレイヤーが弾を発射できる
-- [ ] 敵が横方向に移動しながら下降する
-- [ ] 敵がプレイヤーに向けて弾を発射する
-- [ ] プレイヤーの弾が敵に当たると敵が破壊される
-- [ ] 敵の弾がプレイヤーに当たるとプレイヤーがダメージを受ける
-- [ ] プレイヤーのライフが0になるとゲームオーバー
-
-### AC-2: 重力メカニクス
-- [ ] プレイヤーがスペースキーで重力の源を配置できる
-- [ ] 重力の源は画面内の任意の位置に配置可能
-- [ ] 重力の源は最大3つまで同時存在可能
-- [ ] 重力の源は5秒後に消滅する
-- [ ] 重力の源は周囲の弾と敵を引き寄せる
-- [ ] 敵が重力の源に吸い込まれると自爆する
-- [ ] 重力の源による連鎖反応がスコア加算に反映される
-
-### AC-3: UI/UX
-- [ ] ゲームタイトル画面が表示される
-- [ ] スコアとライフが表示される
-- [ ] ゲームオーバー画面が表示される
-- [ ] リトライが可能
-- [ ] 操作説明が表示される
-
-### AC-4: 新規性
-- [ ] 重力の源が敵の弾道を曲げることを視覚的に確認できる
-- [ ] 敵が重力の源に吸い込まれるアニメーションが存在する
-- [ ] 重力の源による戦略的深度が従来のインベーダーゲームと明確に異なる
+- The visible title, README H1, and this product brief use the same product name.
+- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
+- Space changes the gravity lane between Floor and Ceiling.
+- A score is awarded only when the defender is aligned with the invader and on the same lane.
+- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
 
 ## Non-Goals
 
-- マルチプレイヤー機能
-- ハイスコアの永続化（データベース使用）
-- 複雑なストーリーやキャラクター設定
-- モバイル対応（まずはブラウザゲームとして提供）
-- サウンドエフェクト（Sprint 1では省略可能）
-
-## Qualitative Requirements → Observable Criteria
-
-| 定性要求 | 観測可能な基準 |
-|---------|--------------|
-| 新規性 | 重力の源による弾道曲げ・敵の自爆メカニクスが存在する |
-| 楽しい | 連鎖反応によるスコア加算が頻繁に発生する |
-| ポップ | 重力の源の視覚効果（歪み・吸引アニメーション）が存在する |
-| シンプル | 操作は矢印キー（移動）+ Zキー（弾発射）+ スペースキー（重力配置）の3つ |
-| Production-ready | Dockerでビルド可能、Kubernetesでデプロイ可能、CIでテストが通る |
-
-## App Title
-
-**GraviInvaders** (グラビインベーダー)
-
-## Primary Served Path
-
-- `GET /` → ゲーム画面（HTML/CSS/JS）
-- `GET /health` → ヘルスチェックエンドポイント
-- `GET /assets/game.js` → ゲームロジック（JavaScript）
-- `GET /assets/style.css` → スタイルシート
-
-## Technology Stack
-
-- **Backend**: Go (net/http)
-- **Frontend**: Vanilla JavaScript + HTML5 Canvas
-- **Deployment**: Docker + Kubernetes (Helm)
-- **CI**: GitHub Actions
-
----
-
-*This brief is the single source of truth for the GraviInvaders product. All implementation, documentation, and validation activities must align with this concept.*
+- Multiplayer.
+- External score services.
+- Complex level progression.
