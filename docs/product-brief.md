@@ -1,24 +1,41 @@
-# Product Brief: Arun Test
+# Typing Invaders - Product Brief
 
 ## Concept
-
-Arun Test is a compact browser invader game built around a gravity-lane flip mechanic. The player moves left and right, then uses Space to shift between the floor and ceiling lanes. Scoring requires both horizontal alignment and matching the invader lane, so the differentiating mechanic is present in the implemented UI and source code rather than only in documentation.
+**Typing Invaders**は、タイピングとアーケードゲームを融合した新規性のあるインベーダーゲームです。敵が落下する前に単語をタイピングして撃破します。
 
 ## Target User
+- タイピング練習をゲーム感覚で楽しみたいユーザー
+- シンプルでポップなUIを好むカジュアルゲーマー
+- 短時間で遊べるミニマルなゲームを求めるユーザー
 
-- Players who want a short arcade loop with one clear twist.
-- Reviewers who need a fresh-checkout slice that runs without external services.
+## Core Loop
+1. 画面から敵（単語）が落下
+2. ユーザーが該当する単語をタイピング
+3. 正しくタイピングすると敵が撃破されスコア加算
+4. 敵が画面下端に到達するとゲームオーバー
+
+## Differentiating Behavior
+- **タイピング駆動の撃破**: クリックやキーボードの矢印キーではなく、実際のタイピングで敵を撃破
+- **単語の難易度選択**: 初心者（3文字）から上級者（8文字以上）まで段階的に挑戦可能
+- **ポップなビジュアル**: 簡潔なCSSアニメーションで敵の落下・撃破を視覚的にフィードバック
 
 ## Acceptance Criteria
-
-- The visible title, README H1, and this product brief use the same product name.
-- The primary route `/` serves the browser game from `client/` when run through the Go server in `server/`.
-- Space changes the gravity lane between Floor and Ceiling.
-- A score is awarded only when the defender is aligned with the invader and on the same lane.
-- The Docker runtime image includes the client assets required for `/` to serve the same UI as local `cd server && go run .`.
+- [ ] `/` でゲーム画面にアクセス可能
+- [ ] `/healthz` でヘルスチェック可能
+- [ ] 敵が画面から落下し、タイピングで撃破できる
+- [ ] スコア表示とゲームオーバー画面が存在
+- [ ] 日本語・英語の単語リストから出題
+- [ ] 外部サービスなしでローカルで動作
 
 ## Non-Goals
+- マルチプレイヤー機能
+- 複雑なグラフィックスやサウンド
+- データベースやユーザー認証
+- モバイル最適化（Sprint 1では対応しない）
 
-- Multiplayer.
-- External score services.
-- Complex level progression.
+## QA Validation
+- ブラウザで `/` にアクセスし、ゲーム画面が表示されること
+- 敵が出現し、タイピングで撃破できること
+- スコアが正しくカウントされること
+- ゲームオーバー後にリトライ可能
+- `/healthz` が `200 OK` を返すこと
